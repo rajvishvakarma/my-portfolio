@@ -69,7 +69,7 @@ const generateInitialWindows = (): Record<AppId, WindowState> => {
       id: app.id,
       title: app.title,
       icon: app.icon,
-      isOpen: isBear, // Open Bear app by default on visit like screenshot!
+      isOpen: false,
       isMinimized: false,
       isMaximized: false,
       position: { x: initialX, y: initialY },
@@ -84,7 +84,7 @@ const generateInitialWindows = (): Record<AppId, WindowState> => {
 
 export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
   windows: generateInitialWindows(),
-  activeWindowId: 'bear',
+  activeWindowId: null,
   maxZIndex: 10,
   theme: 'dark',
   wallpaper: 'tahoe',
@@ -99,15 +99,7 @@ export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
   selectedDesktopIcon: null,
   bootCompleted: false,
   aboutThisMacOpen: false,
-  notifications: [
-    {
-      id: 'welcome-notif',
-      title: 'Welcome to macOS Tahoe',
-      message: "Portfolio of Raj Vishvakarma — Software Engineer. Explore Finder, Terminal, or Projects!",
-      time: 'Now',
-      icon: '/img/icons/finder.png',
-    },
-  ],
+  notifications: [],
 
   openApp: (id: AppId) => {
     const { windows, maxZIndex, addNotification } = get();
@@ -350,7 +342,7 @@ export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
   toggleWifi: () => {
     const next = !get().wifi;
     set({ wifi: next });
-    get().addNotification('Wi-Fi', next ? 'Wi-Fi connected to PortfolioNet' : 'Wi-Fi disconnected');
+    get().addNotification('Wi-Fi', next ? 'Portfolio Wi-Fi indicator on' : 'Portfolio Wi-Fi indicator off');
   },
 
   toggleBluetooth: () => {

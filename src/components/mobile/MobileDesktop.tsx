@@ -31,6 +31,8 @@ import { TerminalApp } from '../applications/TerminalApp';
 import { GitHubApp } from '../applications/GitHubApp';
 import { TrashApp } from '../applications/TrashApp';
 import { SettingsApp } from '../applications/SettingsApp';
+import { WorkspaceApps } from '../applications/WorkspaceApps';
+import { CalculatorApp } from '../applications/CalculatorApp';
 
 export const MobileDesktop: React.FC = () => {
   const {
@@ -75,12 +77,14 @@ export const MobileDesktop: React.FC = () => {
         return <TrashApp />;
       case 'settings':
         return <SettingsApp />;
+      case 'calculator':
+        return <CalculatorApp />;
       default:
-        return null;
+        return <WorkspaceApps id={id} />;
     }
   };
 
-  const mobileApps = appsData.filter((a) => a.id !== 'calculator');
+  const mobileApps = appsData;
 
   return (
     <div className="relative w-full h-full flex flex-col justify-between overflow-hidden text-white select-none">

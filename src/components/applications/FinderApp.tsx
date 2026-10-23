@@ -1,358 +1,71 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Image from 'next/image';
-import {
-  Folder,
-  FileText,
-  Terminal as TerminalIcon,
-  Globe,
-  Briefcase,
-  Layers,
-  User,
-  Mail,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  Grid,
-  List as ListIcon,
-  Download,
-  ExternalLink,
-} from 'lucide-react';
-import { useDesktopStore } from '@/stores/useDesktopStore';
-import { profile } from '@/data/profile';
+import { AppWindow, ArrowLeft, ArrowRight, ChevronDown, Clock3, Cloud, Columns3, Download, FileText, Folder, Grid2X2, HardDrive, Home, Images, List, MoreHorizontal, Search, Share2, Tag, Trash2, Wifi } from 'lucide-react';
 import { AppId } from '@/types/desktop';
+import { appsData } from '@/data/apps';
+import { projects } from '@/data/projects';
+import { useDesktopStore } from '@/stores/useDesktopStore';
+import { WindowControls } from '@/components/windows/WindowControls';
+
+type ViewMode = 'grid' | 'list' | 'columns' | 'gallery';
+type FileItem = { name: string; kind: string; opened: string; appId: AppId; icon?: string };
+
+const recentFiles: FileItem[] = [
+  { name: 'Raj_Vishvakarma_Resume.pdf', kind: 'PDF Document', opened: 'Today', appId: 'resume' },
+  { name: 'About Raj Vishvakarma', kind: 'Document', opened: 'Today', appId: 'about' },
+  ...projects.map((project) => ({ name: project.title, kind: 'Project Folder', opened: 'Yesterday', appId: 'projects' as AppId })),
+  { name: 'Metheus Lab — Experience', kind: 'Document', opened: 'This week', appId: 'experience' },
+  { name: 'Skills & Tech Stack', kind: 'Document', opened: 'This week', appId: 'skills' },
+  { name: 'Contact Raj', kind: 'Internet Shortcut', opened: 'This month', appId: 'contact' },
+];
+
+const sidebarGroups = [
+  { title: '', items: [{ label: 'Recents', icon: Clock3 }, { label: 'Shared', icon: Folder }] },
+  { title: 'Favorites', items: [{ label: 'Downloads', icon: Download }, { label: 'Desktop', icon: AppWindow }, { label: 'Applications', icon: Grid2X2 }, { label: 'Documents', icon: FileText }] },
+  { title: 'Locations', items: [{ label: 'iCloud Drive', icon: Cloud }, { label: 'Raj’s Mac', icon: Home }, { label: 'Macintosh HD', icon: HardDrive }, { label: 'AirDrop', icon: Wifi }, { label: 'Trash', icon: Trash2 }] },
+];
 
 export const FinderApp: React.FC = () => {
-  const { openApp } = useDesktopStore();
-  const [currentFolder, setCurrentFolder] = useState<'recents' | 'applications' | 'documents' | 'projects'>('recents');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [section, setSection] = useState('Recents');
+  const [query, setQuery] = useState('');
+  const [view, setView] = useState<ViewMode>('list');
+  const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
+  const openApp = useDesktopStore((state) => state.openApp);
 
-  const finderItems = [
-    {
-      id: 'about',
-      name: 'About Raj.app',
-      kind: 'Application',
-      size: '4.2 MB',
-      date: 'Today, 10:15 AM',
-      icon: '/img/icons/folder-generic.png',
-      appId: 'about' as AppId,
-      category: ['recents', 'applications'],
-    },
-    {
-      id: 'projects',
-      name: 'Projects.app',
-      kind: 'Application',
-      size: '18.4 MB',
-      date: 'Yesterday, 4:20 PM',
-      icon: '/img/icons/safari.png',
-      appId: 'projects' as AppId,
-      category: ['recents', 'applications', 'projects'],
-    },
-    {
-      id: 'skills',
-      name: 'Skills & Stack.app',
-      kind: 'Application',
-      size: '2.8 MB',
-      date: 'Oct 22, 2024',
-      icon: '/img/icons/app-store.png',
-      appId: 'skills' as AppId,
-      category: ['recents', 'applications'],
-    },
-    {
-      id: 'experience',
-      name: 'Experience Timeline.app',
-      kind: 'Application',
-      size: '3.1 MB',
-      date: 'Oct 20, 2024',
-      icon: '/img/icons/calendar.png',
-      appId: 'experience' as AppId,
-      category: ['recents', 'applications', 'documents'],
-    },
-    {
-      id: 'resume',
-      name: 'Raj_Vishvakarma_Resume.pdf',
-      kind: 'PDF Document',
-      size: '118 KB',
-      date: 'Oct 18, 2024',
-      icon: '/img/icons/codefile.png',
-      appId: 'resume' as AppId,
-      category: ['recents', 'documents'],
-    },
-    {
-      id: 'terminal',
-      name: 'Terminal.app',
-      kind: 'Application',
-      size: '1.2 MB',
-      date: 'Just now',
-      icon: '/img/icons/terminal.png',
-      appId: 'terminal' as AppId,
-      category: ['recents', 'applications'],
-    },
-    {
-      id: 'github',
-      name: 'GitHub Explorer.app',
-      kind: 'Application',
-      size: '6.5 MB',
-      date: 'Oct 15, 2024',
-      icon: '/img/icons/github.png',
-      appId: 'github' as AppId,
-      category: ['recents', 'applications', 'projects'],
-    },
-    {
-      id: 'contact',
-      name: 'Contact Raj.app',
-      kind: 'Application',
-      size: '950 KB',
-      date: 'Oct 12, 2024',
-      icon: '/img/icons/mail.png',
-      appId: 'contact' as AppId,
-      category: ['recents', 'applications'],
-    },
-  ];
+  const items = useMemo(() => {
+    let all: FileItem[];
+    if (section === 'Applications') all = appsData.map((app) => ({ name: app.dockTitle, kind: 'Application', opened: 'Recently', appId: app.id, icon: app.icon }));
+    else if (section === 'Documents' || section === 'Downloads') all = recentFiles.filter((file) => file.kind.includes('Document') || file.name.endsWith('.pdf'));
+    else if (section === 'Trash') all = [];
+    else if (section === 'AirDrop') all = [{ name: 'Share Raj’s portfolio', kind: 'Internet Shortcut', opened: 'Today', appId: 'contact' }];
+    else all = recentFiles;
+    return all.filter((file) => `${file.name} ${file.kind}`.toLowerCase().includes(query.toLowerCase()));
+  }, [section, query]);
 
-  const filteredItems = finderItems
-    .filter((item) => item.category.includes(currentFolder))
-    .filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const changeSection = (next: string) => { if (next !== section) setHistory((current) => [...current, section]); setSection(next); setSelectedFile(null); };
+  const selected = items.find((file) => file.name === selectedFile);
+  const fileIcon = (file: FileItem) => file.icon ? <Image src={file.icon} alt="" width={22} height={22} className="h-5 w-5 object-contain" /> : file.kind === 'Project Folder' ? <Folder size={20} className="fill-blue-500/40 text-blue-500" /> : <FileText size={19} className="text-neutral-500 dark:text-neutral-300" />;
 
-  return (
-    <div className="flex flex-col h-full bg-white/95 dark:bg-[#1e1e1e]/95 text-neutral-800 dark:text-neutral-100 select-none">
-      {/* Finder Toolbar */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-black/10 dark:border-white/10 bg-neutral-100/70 dark:bg-[#282828]/70 backdrop-blur-md">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1 text-neutral-400 dark:text-neutral-500">
-            <button className="p-1 rounded hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              <ChevronLeft size={16} />
-            </button>
-            <button className="p-1 rounded hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-              <ChevronRight size={16} />
-            </button>
-          </div>
-          <span className="font-semibold text-xs tracking-wide text-neutral-700 dark:text-neutral-200 capitalize ml-1">
-            {currentFolder}
-          </span>
-        </div>
-
-        <div className="flex items-center space-x-3">
-          {/* View mode toggle */}
-          <div className="flex items-center bg-black/5 dark:bg-white/10 rounded-md p-0.5 border border-black/5 dark:border-white/10">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-1 rounded ${
-                viewMode === 'grid'
-                  ? 'bg-white dark:bg-neutral-700 shadow-sm text-blue-600 dark:text-blue-400'
-                  : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-              }`}
-              title="Grid View"
-            >
-              <Grid size={14} />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-1 rounded ${
-                viewMode === 'list'
-                  ? 'bg-white dark:bg-neutral-700 shadow-sm text-blue-600 dark:text-blue-400'
-                  : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-              }`}
-              title="List View"
-            >
-              <ListIcon size={14} />
-            </button>
-          </div>
-
-          {/* Search bar */}
-          <div className="relative">
-            <Search size={13} className="absolute left-2.5 top-2 text-neutral-400" />
-            <input
-              type="text"
-              placeholder="Search Finder"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-7 pr-3 py-1 text-xs rounded-md bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 focus:outline-none focus:ring-1 focus:ring-blue-500 w-36 sm:w-48 placeholder-neutral-400 dark:placeholder-neutral-500"
-            />
-          </div>
-        </div>
+  return <div className="finder-window flex h-full min-h-0 overflow-hidden text-neutral-900 dark:text-[#f0eff4]">
+    <aside className="finder-sidebar flex w-[205px] shrink-0 flex-col overflow-y-auto border-r border-black/10 px-3 pb-3 dark:border-white/10">
+      <div className="flex h-[62px] shrink-0 items-center px-2"><WindowControls appId="finder" /></div>
+      {sidebarGroups.map((group) => <div key={group.title || 'top'} className="mb-3">{group.title && <div className="px-2 pb-1 pt-3 text-[11px] font-semibold text-neutral-500 dark:text-neutral-400">{group.title}</div>}{group.items.map(({ label, icon: Icon }) => <button key={label} onClick={() => changeSection(label)} className={`finder-sidebar-item flex w-full items-center gap-2 rounded-[9px] px-2 py-1.5 text-left text-[13px] font-medium ${section === label ? 'bg-black/10 text-[#0a84ff] dark:bg-white/11' : 'hover:bg-black/5 dark:hover:bg-white/7'}`}><Icon size={18} strokeWidth={1.9} className={section === label ? 'text-[#0a84ff]' : 'text-neutral-600 dark:text-neutral-200'} /><span className="truncate">{label}</span></button>)}</div>)}
+    </aside>
+    <div className="flex min-w-0 flex-1 flex-col">
+      <div data-window-drag className="finder-toolbar flex h-[62px] shrink-0 items-center gap-3 border-b border-black/10 px-4 dark:border-white/10">
+        <div className="finder-toolbar-cluster flex items-center rounded-full"><button aria-label="Back" onClick={() => { const last = history.at(-1); if (last) { setSection(last); setHistory((current) => current.slice(0, -1)); } }} className="rounded-full p-2 text-neutral-500 hover:text-white"><ArrowLeft size={17} /></button><span className="h-5 w-px bg-white/10" /><button aria-label="Forward" onClick={() => changeSection('Recents')} className="rounded-full p-2 text-neutral-500 hover:text-white"><ArrowRight size={17} /></button></div>
+        <h2 className="min-w-0 flex-1 truncate text-[18px] font-bold tracking-tight">{section}</h2>
+        <div className="finder-toolbar-cluster hidden items-center rounded-full sm:flex">{([['grid', Grid2X2], ['list', List], ['columns', Columns3], ['gallery', Images]] as const).map(([mode, Icon]) => <button key={mode} aria-label={`${mode} view`} onClick={() => setView(mode)} className={`rounded-full p-2 ${view === mode ? 'bg-white/15 text-white' : 'text-neutral-400 hover:text-white'}`}><Icon size={17} /></button>)}</div>
+        <button aria-label="Share selected item" onClick={() => selected && openApp(selected.appId)} className="hidden rounded-full p-2 text-neutral-400 hover:bg-white/10 hover:text-white md:block"><Share2 size={17} /></button>
+        <button aria-label="Tags" onClick={() => setView('grid')} className="hidden rounded-full p-2 text-neutral-400 hover:bg-white/10 hover:text-white md:block"><Tag size={17} /></button>
+        <button aria-label="More Finder actions" onClick={() => openApp('settings')} className="hidden rounded-full p-2 text-neutral-400 hover:bg-white/10 hover:text-white md:block"><MoreHorizontal size={19} /></button>
+        <div className="finder-search flex items-center gap-1 rounded-full px-2.5 py-1.5"><Search size={16} /><input aria-label="Search Finder" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search" className="w-20 bg-transparent text-[12px] outline-none placeholder:text-neutral-400 focus:w-28" /></div>
       </div>
-
-      {/* Main Finder Body */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Finder Sidebar */}
-        <div className="w-48 bg-neutral-100/50 dark:bg-[#1a1a1a]/50 border-r border-black/10 dark:border-white/10 p-3 space-y-4 text-xs overflow-y-auto hidden sm:block">
-          <div>
-            <div className="px-2 py-1 text-[10px] font-semibold tracking-wider text-neutral-400 dark:text-neutral-500 uppercase">
-              Favorites
-            </div>
-            <div className="space-y-0.5 mt-1">
-              <button
-                onClick={() => setCurrentFolder('recents')}
-                className={`w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left transition-colors ${
-                  currentFolder === 'recents'
-                    ? 'bg-blue-500 text-white font-medium'
-                    : 'hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300'
-                }`}
-              >
-                <Folder size={14} className={currentFolder === 'recents' ? 'text-white' : 'text-blue-500'} />
-                <span>All Files & Apps</span>
-              </button>
-              <button
-                onClick={() => setCurrentFolder('applications')}
-                className={`w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left transition-colors ${
-                  currentFolder === 'applications'
-                    ? 'bg-blue-500 text-white font-medium'
-                    : 'hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300'
-                }`}
-              >
-                <Layers size={14} className={currentFolder === 'applications' ? 'text-white' : 'text-blue-500'} />
-                <span>Applications</span>
-              </button>
-              <button
-                onClick={() => setCurrentFolder('projects')}
-                className={`w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left transition-colors ${
-                  currentFolder === 'projects'
-                    ? 'bg-blue-500 text-white font-medium'
-                    : 'hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300'
-                }`}
-              >
-                <Briefcase size={14} className={currentFolder === 'projects' ? 'text-white' : 'text-blue-500'} />
-                <span>Projects</span>
-              </button>
-              <button
-                onClick={() => setCurrentFolder('documents')}
-                className={`w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left transition-colors ${
-                  currentFolder === 'documents'
-                    ? 'bg-blue-500 text-white font-medium'
-                    : 'hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300'
-                }`}
-              >
-                <FileText size={14} className={currentFolder === 'documents' ? 'text-white' : 'text-blue-500'} />
-                <span>Documents</span>
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <div className="px-2 py-1 text-[10px] font-semibold tracking-wider text-neutral-400 dark:text-neutral-500 uppercase">
-              Quick Shortcuts
-            </div>
-            <div className="space-y-0.5 mt-1">
-              <button
-                onClick={() => openApp('about')}
-                className="w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300 transition-colors"
-              >
-                <User size={14} className="text-purple-500" />
-                <span>About Me</span>
-              </button>
-              <button
-                onClick={() => openApp('terminal')}
-                className="w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300 transition-colors"
-              >
-                <TerminalIcon size={14} className="text-emerald-500" />
-                <span>Open Terminal</span>
-              </button>
-              <button
-                onClick={() => openApp('contact')}
-                className="w-full flex items-center space-x-2.5 px-2 py-1.5 rounded-md text-left hover:bg-black/5 dark:hover:bg-white/10 text-neutral-600 dark:text-neutral-300 transition-colors"
-              >
-                <Mail size={14} className="text-amber-500" />
-                <span>Send Message</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col overflow-y-auto p-4 space-y-4">
-          {/* Welcome Banner Card inside Finder */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/60 dark:border-white/20 shadow-md relative shrink-0">
-                <Image src={profile.avatar} alt={profile.name} fill className="object-cover" />
-              </div>
-              <div>
-                <div className="flex items-center space-x-2">
-                  <h2 className="text-base font-bold text-neutral-900 dark:text-white">{profile.name}</h2>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500 text-white font-medium">
-                    {profile.role}
-                  </span>
-                </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-300 mt-0.5 max-w-md line-clamp-2">
-                  {profile.shortBio}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2 shrink-0">
-              <button
-                onClick={() => openApp('projects')}
-                className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium shadow-sm transition-all"
-              >
-                View Projects
-              </button>
-              <button
-                onClick={() => openApp('resume')}
-                className="px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-neutral-800 dark:text-neutral-200 text-xs font-medium transition-all"
-              >
-                Resume
-              </button>
-            </div>
-          </div>
-
-          {/* Files List / Grid */}
-          {viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-1">
-              {filteredItems.map((item) => (
-                <div
-                  key={item.id}
-                  onDoubleClick={() => openApp(item.appId)}
-                  onClick={() => openApp(item.appId)}
-                  className="group flex flex-col items-center p-3 rounded-xl hover:bg-blue-500/10 dark:hover:bg-blue-500/20 border border-transparent hover:border-blue-500/30 cursor-pointer transition-all duration-150 text-center"
-                >
-                  <div className="w-14 h-14 relative mb-2 transition-transform duration-200 group-hover:scale-105">
-                    <Image src={item.icon} alt={item.name} fill className="object-contain drop-shadow-md" />
-                  </div>
-                  <span className="text-xs font-medium text-neutral-800 dark:text-neutral-200 line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                    {item.name}
-                  </span>
-                  <span className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5">{item.kind}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="border border-black/10 dark:border-white/10 rounded-lg overflow-hidden">
-              <div className="grid grid-cols-12 px-3 py-1.5 bg-neutral-100/70 dark:bg-neutral-800/70 text-[11px] font-semibold text-neutral-400 dark:text-neutral-500 border-b border-black/10 dark:border-white/10">
-                <div className="col-span-6">Name</div>
-                <div className="col-span-3">Kind</div>
-                <div className="col-span-3 text-right">Size</div>
-              </div>
-              <div className="divide-y divide-black/5 dark:divide-white/5">
-                {filteredItems.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => openApp(item.appId)}
-                    className="grid grid-cols-12 items-center px-3 py-2 text-xs hover:bg-blue-500/10 dark:hover:bg-blue-500/20 cursor-pointer transition-colors"
-                  >
-                    <div className="col-span-6 flex items-center space-x-2.5">
-                      <div className="w-5 h-5 relative shrink-0">
-                        <Image src={item.icon} alt={item.name} fill className="object-contain" />
-                      </div>
-                      <span className="font-medium text-neutral-800 dark:text-neutral-200 truncate">{item.name}</span>
-                    </div>
-                    <div className="col-span-3 text-neutral-500 text-[11px]">{item.kind}</div>
-                    <div className="col-span-3 text-right text-neutral-500 text-[11px]">{item.size}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Finder Status Footer */}
-      <div className="px-4 py-1.5 bg-neutral-100/80 dark:bg-[#1a1a1a]/80 border-t border-black/10 dark:border-white/10 text-[11px] text-neutral-500 flex justify-between items-center">
-        <span>{filteredItems.length} items</span>
-        <span className="text-neutral-400">Double click an item to launch</span>
-      </div>
+      {view === 'list' ? <div className="flex min-h-0 flex-1 flex-col"><div className="finder-list-head grid shrink-0 grid-cols-[minmax(170px,1fr)_145px_150px] border-b border-black/10 px-4 py-2 text-[11px] font-semibold text-neutral-500 dark:border-white/10 dark:text-neutral-400"><span>Name</span><span>Kind</span><span>Date Last Opened <ChevronDown size={11} className="inline" /></span></div><div className="min-h-0 flex-1 overflow-y-auto px-3 py-2">{items.map((file) => <button key={file.name} onClick={() => setSelectedFile(file.name)} onDoubleClick={() => openApp(file.appId)} className={`finder-file-row grid w-full grid-cols-[minmax(170px,1fr)_145px_150px] items-center rounded-[8px] px-2 py-[5px] text-left text-[12px] ${selectedFile === file.name ? 'bg-[#0a84ff]/80 text-white' : 'odd:bg-white/5 hover:bg-white/10'}`}><span className="flex min-w-0 items-center gap-2">{fileIcon(file)}<span className="truncate font-medium">{file.name}</span></span><span className="truncate text-neutral-500 dark:text-neutral-400">{file.kind}</span><span className="truncate text-neutral-500 dark:text-neutral-400">{file.opened}</span></button>)}{items.length === 0 && <div className="p-8 text-center text-sm text-neutral-500">No items here.</div>}</div></div> : <div className="grid min-h-0 flex-1 auto-rows-min grid-cols-3 gap-4 overflow-y-auto p-6 sm:grid-cols-4">{items.map((file) => <button key={file.name} onClick={() => setSelectedFile(file.name)} onDoubleClick={() => openApp(file.appId)} className={`flex flex-col items-center gap-2 rounded-xl p-3 text-center text-[12px] hover:bg-white/10 ${selectedFile === file.name ? 'bg-blue-500/25' : ''}`}><span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">{file.icon ? <Image src={file.icon} alt="" width={42} height={42} /> : fileIcon(file)}</span><span className="line-clamp-2">{file.name}</span></button>)}</div>}
+      <div className="finder-status flex h-9 shrink-0 items-center justify-center border-t border-black/10 text-[11px] text-neutral-500 dark:border-white/10 dark:text-neutral-400">{items.length} {items.length === 1 ? 'item' : 'items'}{selected ? ` · ${selected.name}` : ''}</div>
     </div>
-  );
+  </div>;
 };

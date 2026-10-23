@@ -20,6 +20,7 @@ import { GitHubApp } from '../applications/GitHubApp';
 import { TrashApp } from '../applications/TrashApp';
 import { SettingsApp } from '../applications/SettingsApp';
 import { CalculatorApp } from '../applications/CalculatorApp';
+import { WorkspaceApps } from '../applications/WorkspaceApps';
 
 const renderAppContent = (id: AppId) => {
   switch (id) {
@@ -50,7 +51,7 @@ const renderAppContent = (id: AppId) => {
     case 'calculator':
       return <CalculatorApp />;
     default:
-      return <BearApp />;
+      return <WorkspaceApps id={id} />;
   }
 };
 

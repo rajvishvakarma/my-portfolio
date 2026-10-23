@@ -1,12 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   Wifi,
   Battery,
+  BatteryCharging,
+  Bluetooth,
+  CirclePlay,
+  Clock3,
+  PawPrint,
   Sliders,
   Search,
-  Settings,
 } from 'lucide-react';
 import { useDesktopStore } from '@/stores/useDesktopStore';
 import { useClock } from '@/hooks/useClock';
@@ -14,6 +19,8 @@ import { AppleMenuDropdown } from './AppleMenuDropdown';
 import { MenuDropdown } from './MenuDropdown';
 import { DynamicIsland } from './DynamicIsland';
 import { getAppMetadata } from '@/data/apps';
+import { appsData } from '@/data/apps';
+import { useMediaStore } from '@/stores/useMediaStore';
 
 export const MenuBar: React.FC = () => {
   const {
@@ -25,29 +32,41 @@ export const MenuBar: React.FC = () => {
     controlCenterOpen,
     setControlCenterOpen,
     wifi,
+    toggleWifi,
+    bluetooth,
+    toggleBluetooth,
     openApp,
   } = useDesktopStore();
 
   const { timeString, dateString } = useClock();
+  const [statusMenu, setStatusMenu] = useState<'wifi' | 'battery' | null>(null);
+  const [spotlightOpen, setSpotlightOpen] = useState(false);
+  const [spotlightQuery, setSpotlightQuery] = useState('');
+  const [battery, setBattery] = useState<{ level: number; charging: boolean } | null>(null);
+  const mediaToggle = useMediaStore((state) => state.toggle);
+  const mediaPlaying = useMediaStore((state) => state.playing);
+
+  useEffect(() => {
+    const nav = navigator as Navigator & { getBattery?: () => Promise<{ level: number; charging: boolean }> };
+    nav.getBattery?.().then((result) => setBattery({ level: Math.round(result.level * 100), charging: result.charging })).catch(() => {});
+  }, []);
 
   const activeAppMeta = activeWindowId ? getAppMetadata(activeWindowId) : undefined;
   const activeAppName = activeAppMeta ? activeAppMeta.dockTitle : 'Finder';
 
-  const menuItems = ['File', 'Edit', 'View', 'Window', 'Help'];
+  const menuItems = ['File', 'Edit', 'View', 'Go', 'Window', 'Help'];
+  const spotlightResults = appsData.filter((app) => `${app.dockTitle} ${app.id}`.toLowerCase().includes(spotlightQuery.toLowerCase())).slice(0, 7);
+  const openSpotlightResult = (id: typeof appsData[number]['id']) => {
+    openApp(id);
+    setSpotlightOpen(false);
+    setSpotlightQuery('');
+  };
 
   return (
     <>
-      <header
-        style={{
-          background: 'rgba(255, 255, 255, 0.14)',
-          backdropFilter: 'var(--lg-blur-menu)',
-          WebkitBackdropFilter: 'var(--lg-blur-menu)',
-          borderBottom: '0.5px solid rgba(255, 255, 255, 0.18)',
-        }}
-        className="fixed top-0 left-0 right-0 h-7 z-[9990] flex items-center justify-between px-3 text-xs select-none text-neutral-900 dark:text-white font-medium"
-      >
+      <header className="mac-menu-bar fixed top-0 left-0 right-0 h-8 z-[9990] flex items-center justify-between px-3 text-xs select-none text-neutral-900 dark:text-white font-medium">
         {/* Left Section: Apple Logo + Menus */}
-        <div className="flex items-center space-x-1.5">
+        <div className="flex items-center gap-1">
           {/* Apple Logo */}
           <button
             onClick={() => setAppleMenuOpen(!appleMenuOpen)}
@@ -90,23 +109,20 @@ export const MenuBar: React.FC = () => {
         </div>
 
         {/* Right Section: Battery + Wi-Fi + Spotlight + Control Center + Clock */}
-        <div className="flex items-center space-x-3 text-xs">
-          {/* Battery Status */}
-          <div className="flex items-center space-x-1.5">
-            <span className="text-[11px] font-semibold">100%</span>
-            <div className="w-5 h-2.5 rounded-[3px] border border-current p-0.5 flex items-center">
-              <div className="w-full h-full bg-emerald-400 rounded-[1px]" />
-            </div>
-          </div>
-
+        <div className="flex items-center gap-1.5 text-xs">
+          <button onClick={() => openApp('about')} className="hidden rounded-md p-1 hover:bg-white/15 md:block" title="About Raj"><PawPrint size={16} /></button>
+          <button onClick={() => openApp('clock')} className="hidden rounded-md p-1 hover:bg-white/15 md:block" title="Clock"><Clock3 size={16} /></button>
+          <button onClick={mediaToggle} className="hidden rounded-md p-1 hover:bg-white/15 md:block" title={mediaPlaying ? 'Pause music' : 'Play music'}><CirclePlay size={16} className={mediaPlaying ? 'text-green-400' : ''} /></button>
+          <button onClick={() => setStatusMenu(statusMenu === 'battery' ? null : 'battery')} className="flex items-center gap-1 rounded-md px-1 py-0.5 hover:bg-white/15" title="Battery status"><span className="text-[11px]">{battery ? `${battery.level}%` : ''}</span>{battery?.charging ? <BatteryCharging size={17} /> : <Battery size={17} />}</button>
           {/* Wi-Fi Icon */}
-          <span className="p-0.5" title={wifi ? 'Wi-Fi: Connected' : 'Wi-Fi: Off'}>
+          <button onClick={() => setStatusMenu(statusMenu === 'wifi' ? null : 'wifi')} className="rounded-md p-1 hover:bg-white/15" title={wifi ? 'Wi-Fi: On' : 'Wi-Fi: Off'}>
             <Wifi size={14} className={wifi ? 'opacity-100' : 'opacity-40'} />
-          </span>
+          </button>
+          <button onClick={toggleBluetooth} className="hidden rounded-md p-1 hover:bg-white/15 sm:block" title={bluetooth ? 'Bluetooth: On' : 'Bluetooth: Off'}><Bluetooth size={15} className={bluetooth ? '' : 'opacity-40'} /></button>
 
           {/* Spotlight Icon */}
           <button
-            onClick={() => openApp('finder')}
+            onClick={() => { setSpotlightOpen(!spotlightOpen); setSpotlightQuery(''); }}
             className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
             title="Spotlight Search"
           >
@@ -125,7 +141,7 @@ export const MenuBar: React.FC = () => {
           </button>
 
           {/* Clock & Date */}
-          <div className="flex items-center space-x-1 px-1 font-medium text-xs tracking-tight">
+          <div className="flex items-center gap-1 px-1 font-medium text-xs tracking-tight whitespace-nowrap">
             <span>{dateString}</span>
             <span>{timeString || '1:44 AM'}</span>
           </div>
@@ -135,6 +151,15 @@ export const MenuBar: React.FC = () => {
       {/* Popovers */}
       <AppleMenuDropdown />
       <MenuDropdown />
+      {spotlightOpen && <div className="fixed inset-0 z-[9998] bg-black/15" onMouseDown={() => setSpotlightOpen(false)}>
+        <div className="mac-status-menu mx-auto mt-[13vh] w-[min(620px,calc(100vw-32px))] overflow-hidden rounded-[22px] p-0 text-white" onMouseDown={(event) => event.stopPropagation()}>
+          <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4"><Search size={22} className="text-white/70" /><input autoFocus value={spotlightQuery} onChange={(event) => setSpotlightQuery(event.target.value)} onKeyDown={(event) => { if (event.key === 'Escape') setSpotlightOpen(false); if (event.key === 'Enter' && spotlightResults[0]) openSpotlightResult(spotlightResults[0].id); }} placeholder="Spotlight Search" aria-label="Spotlight Search" className="w-full bg-transparent text-xl outline-none placeholder:text-white/45" /></div>
+          <div className="p-2">{spotlightResults.length ? spotlightResults.map((app) => <button key={app.id} onClick={() => openSpotlightResult(app.id)} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm hover:bg-white/15"><Image src={app.icon} alt="" width={28} height={28} className="rounded-md" />{app.dockTitle}</button>) : <p className="px-3 py-4 text-sm text-white/60">No results</p>}</div>
+        </div>
+      </div>}
+      {statusMenu && <div className="mac-status-menu fixed right-14 top-9 z-[9999] w-72 rounded-[20px] p-4 text-sm text-white">
+        {statusMenu === 'wifi' ? <><div className="flex items-center justify-between"><strong>Wi-Fi</strong><button aria-label="Toggle Wi-Fi" onClick={toggleWifi} className={`h-6 w-11 rounded-full p-0.5 transition-colors ${wifi ? 'bg-blue-500' : 'bg-white/20'}`}><span className={`block h-5 w-5 rounded-full bg-white transition-transform ${wifi ? 'translate-x-5' : ''}`} /></button></div><p className="mt-4 text-xs text-white/65">{wifi ? 'Portfolio connection is on' : 'Wi-Fi is off'}</p><div className="mt-4 border-t border-white/15 pt-3"><button onClick={() => { openApp('settings'); setStatusMenu(null); }} className="text-xs font-semibold hover:underline">Wi-Fi Settings…</button></div></> : <><strong>Battery</strong><p className="mt-4 text-xs text-white/75">{battery ? `${battery.level}% ${battery.charging ? '· Charging' : '· On battery'}` : 'Battery status is unavailable in this browser.'}</p><div className="mt-4 border-t border-white/15 pt-3"><button onClick={() => { openApp('settings'); setStatusMenu(null); }} className="text-xs font-semibold hover:underline">Battery Settings…</button></div></>}
+      </div>}
     </>
   );
 };

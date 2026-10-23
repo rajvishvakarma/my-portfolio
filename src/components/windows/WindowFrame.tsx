@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { WindowState } from '@/types/desktop';
 import { useDesktopStore } from '@/stores/useDesktopStore';
 import { WindowControls } from './WindowControls';
@@ -16,9 +15,6 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
   const {
     id,
     title,
-    icon,
-    isOpen,
-    isMinimized,
     isMaximized,
     position,
     size,
@@ -36,6 +32,8 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
 
   const isFocused = activeWindowId === id;
   const frameRef = useRef<HTMLDivElement>(null);
+  const responsiveWidth = `min(${size.width}px, calc(100vw - 100px))`;
+  const responsiveHeight = `min(${size.height}px, calc(100vh - 108px))`;
 
   // Dragging state
   const isDragging = useRef(false);
@@ -46,14 +44,18 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0 });
 
   const handleTitleBarMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button, input')) return;
     focusWindow(id);
 
     if (isMaximized) return;
 
     isDragging.current = true;
+    const bounds = frameRef.current?.getBoundingClientRect();
+    let nextX = bounds?.left ?? position.x;
+    let nextY = bounds?.top ?? position.y;
     dragOffset.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+      x: e.clientX - nextX,
+      y: e.clientY - nextY,
     };
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
@@ -63,21 +65,27 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
       const viewportHeight = window.innerHeight;
 
       const newX = Math.min(
-        Math.max(-size.width + 100, moveEvent.clientX - dragOffset.current.x),
-        viewportWidth - 100
+        Math.max(0, moveEvent.clientX - dragOffset.current.x),
+        viewportWidth - 140
       );
       const newY = Math.min(
-        Math.max(30, moveEvent.clientY - dragOffset.current.y),
-        viewportHeight - 120
+        Math.max(32, moveEvent.clientY - dragOffset.current.y),
+        viewportHeight - 80
       );
 
-      updateWindowPosition(id, { x: newX, y: newY });
+      nextX = newX;
+      nextY = newY;
+      if (frameRef.current) {
+        frameRef.current.style.left = `${newX}px`;
+        frameRef.current.style.top = `${newY}px`;
+      }
     };
 
     const handleMouseUp = () => {
       isDragging.current = false;
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      updateWindowPosition(id, { x: nextX, y: nextY });
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -91,12 +99,15 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
     if (isMaximized) return;
 
     isResizing.current = true;
+    const bounds = frameRef.current?.getBoundingClientRect();
     resizeStart.current = {
       x: e.clientX,
       y: e.clientY,
-      w: size.width,
-      h: size.height,
+      w: bounds?.width ?? size.width,
+      h: bounds?.height ?? size.height,
     };
+    let nextWidth = resizeStart.current.w;
+    let nextHeight = resizeStart.current.h;
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       if (!isResizing.current) return;
@@ -107,49 +118,42 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
       const newWidth = Math.max(minSize.width, resizeStart.current.w + deltaX);
       const newHeight = Math.max(minSize.height, resizeStart.current.h + deltaY);
 
-      updateWindowSize(id, { width: newWidth, height: newHeight });
+      nextWidth = newWidth;
+      nextHeight = newHeight;
+      if (frameRef.current) {
+        frameRef.current.style.width = `${newWidth}px`;
+        frameRef.current.style.height = `${newHeight}px`;
+      }
     };
 
     const handleMouseUp = () => {
       isResizing.current = false;
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      updateWindowSize(id, { width: nextWidth, height: nextHeight });
     };
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  // Window titlebar color: for Bear, it has that iconic pastel blue/teal header from screenshot
-  const isBear = id === 'bear';
-  const titleBarBg = isBear
-    ? 'rgba(125, 167, 197, 0.85)'
-    : 'var(--window-bar-bg)';
-
   return (
     <motion.div
       ref={frameRef}
-      initial={{ opacity: 0, scale: 0.65, y: 100, borderRadius: 28 }}
-      animate={{ opacity: 1, scale: 1, y: 0, borderRadius: isMaximized ? 0 : 14 }}
-      exit={{
-        opacity: [1, 0.6, 0],
-        scale: 0.25,
-        y: 280,
-        borderRadius: 28,
-        transition: {
-          duration: 0.35,
-          ease: [0.32, 0.72, 0, 1],
-          opacity: { times: [0, 0.6, 1], ease: 'easeOut' },
-        },
+      initial={{ opacity: 0, scale: 0.975, y: 8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.985, y: 5, transition: { duration: 0.12, ease: 'easeIn' } }}
+      transition={{ duration: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
+      onMouseDown={(event) => {
+        focusWindow(id);
+        if (id === 'finder' && (event.target as HTMLElement).closest('[data-window-drag]') && !(event.target as HTMLElement).closest('button, input')) handleTitleBarMouseDown(event);
       }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      onMouseDown={() => focusWindow(id)}
       style={{
-        left: isMaximized ? 0 : `${position.x}px`,
-        top: isMaximized ? 28 : `${position.y}px`,
-        width: isMaximized ? '100vw' : `${size.width}px`,
-        height: isMaximized ? 'calc(100vh - 28px)' : `${size.height}px`,
-        transformOrigin: '50% 100%',
+        left: isMaximized ? 0 : position.x,
+        top: isMaximized ? 32 : position.y,
+        width: isMaximized ? '100vw' : responsiveWidth,
+        height: isMaximized ? 'calc(100vh - 32px)' : responsiveHeight,
+        transformOrigin: '50% 50%',
         zIndex: zIndex,
         boxShadow: isMaximized
           ? 'none'
@@ -159,20 +163,15 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
         border: isMaximized ? 'none' : 'var(--lg-border-subtle)',
         borderTop: isMaximized ? 'none' : isFocused ? '0.5px solid rgba(255,255,255,0.5)' : '0.5px solid rgba(255,255,255,0.3)',
       }}
-      className={`fixed overflow-hidden flex flex-col select-none ${
-        isMaximized ? 'rounded-none' : 'rounded-[14px]'
+      className={`mac-window fixed overflow-hidden flex flex-col select-none ${
+        isMaximized ? 'rounded-none' : 'rounded-[22px]'
       }`}
     >
       {/* Liquid Glass Title Bar */}
-      <div
+      {id !== 'finder' && <div
         onMouseDown={handleTitleBarMouseDown}
         onDoubleClick={() => maximizeWindow(id)}
-        style={{
-          backgroundColor: titleBarBg,
-          backdropFilter: 'var(--lg-blur-menu)',
-          WebkitBackdropFilter: 'var(--lg-blur-menu)',
-        }}
-        className="h-8.5 px-3.5 flex items-center justify-between border-b border-black/10 dark:border-white/10 cursor-grab active:cursor-grabbing select-none"
+        className="mac-window-toolbar h-[42px] shrink-0 px-3.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
       >
         {/* Left: Traffic Lights */}
         <div className="flex items-center w-24">
@@ -182,10 +181,8 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
         {/* Center: Title */}
         <div className="flex items-center space-x-1.5 truncate pointer-events-none">
           <span
-            className={`text-[13px] font-medium tracking-tight truncate ${
-              isBear
-                ? 'text-neutral-800 font-semibold'
-                : isFocused
+            className={`text-[13px] font-semibold tracking-tight truncate ${
+              isFocused
                 ? 'text-neutral-800 dark:text-neutral-100'
                 : 'text-neutral-500 dark:text-neutral-400'
             }`}
@@ -196,10 +193,10 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
 
         {/* Right dummy spacer */}
         <div className="w-24" />
-      </div>
+      </div>}
 
       {/* Window Content Shell */}
-      <div className="flex-1 overflow-hidden relative bg-white dark:bg-[#1a1a1a]">
+      <div className="mac-window-content flex-1 overflow-hidden relative">
         {children}
       </div>
 

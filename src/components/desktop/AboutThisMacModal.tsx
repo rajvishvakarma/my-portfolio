@@ -29,7 +29,7 @@ export const AboutThisMacModal: React.FC = () => {
           >
             <X size={8} className="text-[#4c0000] stroke-[2.5]" />
           </button>
-          <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">About This Mac</span>
+          <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">About This Portfolio</span>
           <div className="w-3" />
         </div>
 
@@ -45,38 +45,38 @@ export const AboutThisMacModal: React.FC = () => {
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-neutral-900 dark:text-white">macOS Tahoe</h2>
-            <p className="text-xs text-neutral-500">Version 26.0 (Next.js Edition)</p>
+            <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Raj’s macOS Portfolio</h2>
+            <p className="text-xs text-neutral-500">A browser desktop inspired by macOS Tahoe</p>
           </div>
 
           <div className="w-full bg-black/5 dark:bg-white/5 rounded-xl p-3 text-left space-y-2 text-xs border border-black/5 dark:border-white/5">
             <div className="flex justify-between items-center">
               <span className="text-neutral-500 flex items-center space-x-1.5">
                 <Cpu size={13} className="text-blue-500" />
-                <span>Processor</span>
+                <span>Built with</span>
               </span>
-              <span className="font-semibold text-neutral-900 dark:text-white">Apple M3 Max (16-core)</span>
+              <span className="font-semibold text-neutral-900 dark:text-white">Next.js 16 + React 19</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-neutral-500 flex items-center space-x-1.5">
                 <ShieldCheck size={13} className="text-emerald-500" />
-                <span>Memory</span>
+                <span>State</span>
               </span>
-              <span className="font-semibold text-neutral-900 dark:text-white">64 GB Unified Memory</span>
+              <span className="font-semibold text-neutral-900 dark:text-white">64 GB Unified State</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-neutral-500 flex items-center space-x-1.5">
                 <HardDrive size={13} className="text-purple-500" />
-                <span>Storage</span>
+                <span>Projects</span>
               </span>
-              <span className="font-semibold text-neutral-900 dark:text-white">1 TB Apple SSD</span>
+              <span className="font-semibold text-neutral-900 dark:text-white">4 from my resume</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-neutral-500 flex items-center space-x-1.5">
                 <Monitor size={13} className="text-amber-500" />
-                <span>Graphics</span>
+                <span>Interface</span>
               </span>
-              <span className="font-semibold text-neutral-900 dark:text-white">Liquid Retina XDR (120Hz)</span>
+              <span className="font-semibold text-neutral-900 dark:text-white">Responsive window manager</span>
             </div>
           </div>
 

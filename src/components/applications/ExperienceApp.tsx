@@ -187,7 +187,7 @@ export const ExperienceApp: React.FC = () => {
       {/* Footer */}
       <div className="px-6 py-2.5 bg-neutral-100/70 dark:bg-[#1a1a1a]/70 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] text-neutral-500">
         <span>Curated professional track record</span>
-        <span>Bengaluru, India</span>
+        <span>Balaghat, Madhya Pradesh</span>
       </div>
     </div>
   );

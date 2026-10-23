@@ -1,189 +1,38 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Airplay, Bluetooth, Calculator, Grid2X2, Moon, Pause, Play, SkipBack, SkipForward, Sun, Volume2, Wifi } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Wifi,
-  Bluetooth,
-  Moon,
-  Sun,
-  Volume2,
-  Sliders,
-  Battery,
-  Shield,
-  Sparkles,
-  Check,
-} from 'lucide-react';
 import { useDesktopStore } from '@/stores/useDesktopStore';
+import { useMediaStore } from '@/stores/useMediaStore';
+import { tracks } from '@/data/tracks';
 
-export const ControlCenter: React.FC = () => {
-  const {
-    controlCenterOpen,
-    theme,
-    toggleTheme,
-    wifi,
-    toggleWifi,
-    bluetooth,
-    toggleBluetooth,
-    focusMode,
-    toggleFocus,
-    brightness,
-    setBrightness,
-    volume,
-    setVolume,
-    setControlCenterOpen,
-    openApp,
-  } = useDesktopStore();
+export const ControlCenter = () => {
+  const { controlCenterOpen, setControlCenterOpen, wifi, toggleWifi, bluetooth, toggleBluetooth, focusMode, toggleFocus, brightness, setBrightness, volume, setVolume, theme, toggleTheme, openApp } = useDesktopStore();
+  const { trackIndex, playing, toggle, next, previous } = useMediaStore();
+  const [airdrop, setAirdrop] = useState(false);
+  const tile = 'rounded-[20px] border border-white/25 bg-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,.28),0_8px_20px_rgba(0,0,0,.13)]';
 
-  if (!controlCenterOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: -10, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -10, scale: 0.98 }}
-        transition={{ duration: 0.15 }}
-        className="fixed top-8 right-3 w-80 bg-neutral-200/80 dark:bg-[#1e1e1e]/85 backdrop-blur-3xl rounded-2xl p-3 shadow-2xl border border-white/20 dark:border-white/10 z-[9999] select-none text-neutral-800 dark:text-neutral-100"
-      >
-        {/* Top 2x2 Feature Grid */}
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          {/* Connectivity Box */}
-          <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/10 border border-black/5 dark:border-white/5 space-y-2">
-            {/* Wi-Fi */}
-            <button
-              onClick={toggleWifi}
-              className="flex items-center space-x-2.5 w-full text-left group"
-            >
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-                  wifi
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-black/10 dark:bg-white/10 text-neutral-400'
-                }`}
-              >
-                <Wifi size={14} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[11px] font-semibold leading-tight">Wi-Fi</div>
-                <div className="text-[9px] text-neutral-500 truncate">
-                  {wifi ? 'PortfolioNet' : 'Off'}
-                </div>
-              </div>
-            </button>
-
-            {/* Bluetooth */}
-            <button
-              onClick={toggleBluetooth}
-              className="flex items-center space-x-2.5 w-full text-left group"
-            >
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-                  bluetooth
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-black/10 dark:bg-white/10 text-neutral-400'
-                }`}
-              >
-                <Bluetooth size={14} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[11px] font-semibold leading-tight">Bluetooth</div>
-                <div className="text-[9px] text-neutral-500 truncate">
-                  {bluetooth ? 'Active' : 'Off'}
-                </div>
-              </div>
-            </button>
-          </div>
-
-          {/* Quick Toggles Column */}
-          <div className="flex flex-col gap-2">
-            {/* Focus Mode */}
-            <button
-              onClick={toggleFocus}
-              className={`flex-1 p-2.5 rounded-xl border flex items-center space-x-2.5 transition-all text-left ${
-                focusMode
-                  ? 'bg-indigo-600 text-white border-indigo-500 shadow-xs'
-                  : 'bg-white/70 dark:bg-white/10 border-black/5 dark:border-white/5'
-              }`}
-            >
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                  focusMode ? 'bg-white/20' : 'bg-black/10 dark:bg-white/10 text-neutral-400'
-                }`}
-              >
-                <Moon size={14} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-[11px] font-semibold leading-tight">Focus</div>
-                <div className="text-[9px] opacity-75">{focusMode ? 'On' : 'Off'}</div>
-              </div>
-            </button>
-
-            {/* Dark / Light Mode */}
-            <button
-              onClick={toggleTheme}
-              className="flex-1 p-2.5 rounded-xl bg-white/70 dark:bg-white/10 border border-black/5 dark:border-white/5 flex items-center space-x-2.5 text-left transition-colors"
-            >
-              <div className="w-7 h-7 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center text-amber-500 dark:text-indigo-400">
-                {theme === 'dark' ? <Moon size={14} /> : <Sun size={14} />}
-              </div>
-              <div className="min-w-0">
-                <div className="text-[11px] font-semibold leading-tight">Theme</div>
-                <div className="text-[9px] text-neutral-500 capitalize">{theme} Mode</div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Display Brightness Slider */}
-        <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/10 border border-black/5 dark:border-white/5 mb-2 space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-semibold px-0.5">
-            <span className="flex items-center space-x-1.5">
-              <Sun size={13} className="text-amber-500" />
-              <span>Display Brightness</span>
-            </span>
-            <span className="text-[10px] text-neutral-400">{brightness}%</span>
-          </div>
-          <input
-            type="range"
-            min="25"
-            max="100"
-            value={brightness}
-            onChange={(e) => setBrightness(Number(e.target.value))}
-            className="w-full h-2 bg-black/10 dark:bg-white/20 rounded-lg appearance-none cursor-pointer accent-blue-600"
-          />
-        </div>
-
-        {/* Audio Volume Slider */}
-        <div className="p-2.5 rounded-xl bg-white/70 dark:bg-white/10 border border-black/5 dark:border-white/5 mb-2 space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-semibold px-0.5">
-            <span className="flex items-center space-x-1.5">
-              <Volume2 size={13} className="text-blue-500" />
-              <span>Sound Volume</span>
-            </span>
-            <span className="text-[10px] text-neutral-400">{volume}%</span>
-          </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={(e) => setVolume(Number(e.target.value))}
-            className="w-full h-2 bg-black/10 dark:bg-white/20 rounded-lg appearance-none cursor-pointer accent-blue-600"
-          />
-        </div>
-
-        {/* Bottom Quick Action: Open Settings */}
-        <button
-          onClick={() => {
-            openApp('settings');
-            setControlCenterOpen(false);
-          }}
-          className="w-full py-1.5 text-center text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
-        >
-          Open Desktop Preferences...
-        </button>
-      </motion.div>
-    </AnimatePresence>
-  );
+  return <AnimatePresence>{controlCenterOpen && <motion.div
+    initial={{ opacity: 0, y: -12, scale: .96 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -10, scale: .97 }}
+    transition={{ type: 'spring', stiffness: 420, damping: 35 }}
+    className="control-center fixed right-3 top-10 z-[9999] w-[350px] max-w-[calc(100vw-24px)] select-none rounded-[28px] p-3 text-white"
+  >
+    <div className="grid grid-cols-2 gap-2.5">
+      <div className="space-y-2.5">
+        <button onClick={toggleWifi} className={`${tile} flex min-h-[72px] w-full items-center gap-3 p-3 text-left ${wifi ? 'ring-2 ring-[#58baf4]/70' : 'opacity-65'}`}><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#0878d9]"><Wifi size={25} strokeWidth={3} /></span><span><strong className="block text-sm">Wi-Fi</strong><small className="block text-[11px] leading-tight text-white/75">{wifi ? 'On' : 'Off'}</small></span></button>
+        <button onClick={toggleBluetooth} className={`${tile} flex min-h-[64px] w-full items-center gap-3 p-3 text-left ${bluetooth ? '' : 'opacity-65'}`}><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#0878d9]"><Bluetooth size={22} /></span><span><strong className="block text-sm">Bluetooth</strong><small className="block text-[11px] text-white/75">{bluetooth ? 'On' : 'Off'}</small></span></button>
+        <button onClick={() => setAirdrop(!airdrop)} className={`${tile} flex min-h-[64px] w-full items-center gap-3 p-3 text-left ${airdrop ? '' : 'opacity-75'}`}><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#0878d9]"><Airplay size={21} /></span><span><strong className="block text-sm">AirDrop</strong><small className="block text-[11px] text-white/75">{airdrop ? 'Contacts Only' : 'Off'}</small></span></button>
+      </div>
+      <div className="space-y-2.5">
+        <div className={`${tile} h-[146px] p-3`}><div className="flex h-full flex-col justify-between"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10"><span className="text-xs font-bold">{tracks[trackIndex].glyph}</span></div><div><p className="truncate text-sm font-semibold">{playing ? tracks[trackIndex].title : 'Not Playing'}</p><div className="mt-2 flex justify-between px-1 text-white/70"><button aria-label="Previous track" onClick={previous}><SkipBack size={22} fill="currentColor" /></button><button aria-label={playing ? 'Pause music' : 'Play music'} onClick={toggle} className="text-white">{playing ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</button><button aria-label="Next track" onClick={next}><SkipForward size={22} fill="currentColor" /></button></div></div></div></div>
+        <div className="grid grid-cols-2 gap-2.5"><button onClick={() => openApp('finder')} aria-label="Open Finder" className={`${tile} flex h-[64px] items-center justify-center`}><Grid2X2 size={25} /></button><button onClick={() => { openApp('settings'); setControlCenterOpen(false); }} aria-label="Open settings" className={`${tile} flex h-[64px] items-center justify-center`}><Airplay size={26} /></button></div>
+      </div>
+    </div>
+    <div className="mt-2.5 grid grid-cols-[1fr_1fr_2fr] gap-2.5"><button onClick={toggleTheme} aria-label="Toggle appearance" className={`${tile} flex h-[62px] items-center justify-center`}>{theme === 'dark' ? <Moon size={25} /> : <Sun size={25} />}</button><button onClick={() => openApp('calculator')} aria-label="Open Calculator" className={`${tile} flex h-[62px] items-center justify-center`}><Calculator size={23} /></button><button onClick={toggleFocus} className={`${tile} flex h-[62px] items-center gap-3 p-3 ${focusMode ? 'ring-2 ring-white/55' : ''}`}><span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20"><Moon size={21} /></span><span className="text-sm font-semibold">Focus</span></button></div>
+    <div className={`${tile} mt-2.5 p-3`}><div className="mb-2 flex items-center justify-between text-sm font-semibold"><span>Display</span><span className="text-xs text-white/65">{brightness}%</span></div><div className="flex items-center gap-2"><Sun size={16} /><input aria-label="Display brightness" type="range" min="25" max="100" value={brightness} onChange={(event) => setBrightness(Number(event.target.value))} className="w-full accent-white" /><Sun size={20} /></div></div>
+    <div className={`${tile} mt-2.5 p-3`}><div className="mb-2 flex items-center justify-between text-sm font-semibold"><span>Sound</span><span className="text-xs text-white/65">{volume}%</span></div><div className="flex items-center gap-2"><Volume2 size={16} /><input aria-label="Sound volume" type="range" min="0" max="100" value={volume} onChange={(event) => setVolume(Number(event.target.value))} className="w-full accent-white" /><Volume2 size={20} /></div></div>
+  </motion.div>}</AnimatePresence>;
 };

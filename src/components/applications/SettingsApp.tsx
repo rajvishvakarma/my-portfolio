@@ -156,7 +156,7 @@ export const SettingsApp: React.FC = () => {
       {/* Footer */}
       <div className="px-5 py-2 bg-neutral-100/70 dark:bg-[#1a1a1a]/70 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-[11px] text-neutral-500">
         <span>macOS Tahoe 26.0</span>
-        <span>Preferences persist in local browser storage</span>
+        <span>Theme and wallpaper persist in this browser</span>
       </div>
     </div>
   );

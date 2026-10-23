@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useDesktopStore } from '@/stores/useDesktopStore';
-import { AppId } from '@/types/desktop';
 
 export const MenuDropdown: React.FC = () => {
   const {
@@ -23,7 +22,7 @@ export const MenuDropdown: React.FC = () => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="fixed top-7 left-14 w-52 bg-neutral-100/90 dark:bg-[#202020]/90 backdrop-blur-2xl rounded-xl p-1.5 shadow-2xl border border-black/10 dark:border-white/10 z-[9999] text-xs text-neutral-800 dark:text-neutral-200 select-none space-y-0.5"
+      className="mac-popover fixed top-8 left-14 w-52 rounded-xl p-1.5 z-[9999] text-xs text-neutral-800 dark:text-neutral-200 select-none space-y-0.5"
     >
       {activeMenuDropdown === 'File' && (
         <>
@@ -161,6 +160,14 @@ export const MenuDropdown: React.FC = () => {
         </>
       )}
 
+      {activeMenuDropdown === 'Go' && (
+        <>
+          {([['Recents', 'finder'], ['Projects', 'projects'], ['Documents', 'resume'], ['Applications', 'app-store']] as const).map(([label, appId]) => (
+            <button key={label} onClick={() => { openApp(appId); setActiveMenuDropdown(null); }} className="w-full rounded-md px-2.5 py-1 text-left hover:bg-blue-600 hover:text-white">{label}</button>
+          ))}
+        </>
+      )}
+
       {activeMenuDropdown === 'Help' && (
         <>
           <button
@@ -173,7 +180,7 @@ export const MenuDropdown: React.FC = () => {
             <span>macOS Portfolio Guide</span>
           </button>
           <a
-            href="https://github.com/rajvishvakarma/macos-portfolio"
+            href="https://github.com/rajvishvakarma088-star"
             target="_blank"
             rel="noreferrer"
             className="block w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"

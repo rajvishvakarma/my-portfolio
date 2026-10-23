@@ -1,65 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Check, Volume2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Music2, Wifi, WifiOff, Bell, Volume2, Pause, Play, SkipForward } from 'lucide-react';
+import { useDesktopStore } from '@/stores/useDesktopStore';
+import { useMediaStore } from '@/stores/useMediaStore';
+import { tracks } from '@/data/tracks';
 
-export const DynamicIsland: React.FC = () => {
+export const DynamicIsland = () => {
   const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className="fixed top-1 left-1/2 -translate-x-1/2 z-[9995] pointer-events-auto select-none">
-      <motion.div
-        layout
-        onClick={() => setExpanded(!expanded)}
-        initial={false}
-        animate={{
-          width: expanded ? 320 : 124,
-          height: expanded ? 72 : 24,
-          borderRadius: expanded ? 22 : 30,
-        }}
-        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-        className="bg-black/95 text-white shadow-[0_4px_24px_rgba(0,0,0,0.6)] border border-white/10 cursor-pointer overflow-hidden flex items-center justify-between px-3"
-      >
-        {expanded ? (
-          <div className="w-full flex items-center justify-between px-1">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center text-white shadow-md">
-                <Music size={18} />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-white truncate">Starboy</div>
-                <div className="text-[10px] text-neutral-400 truncate">The Weeknd • Daft Punk</div>
-              </div>
-            </div>
-
-            {/* Sound Wave Bars */}
-            <div className="flex items-center space-x-0.5 pr-2">
-              {[0, 1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  animate={{ height: [4, 16, 8, 20, 4] }}
-                  transition={{
-                    duration: 0.8,
-                    repeat: Infinity,
-                    delay: i * 0.15,
-                    ease: 'easeInOut',
-                  }}
-                  className="w-1 rounded-full bg-emerald-400"
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          /* Compact Dynamic Island Pill (matches screenshot) */
-          <div className="w-full flex items-center justify-between text-neutral-400 px-0.5">
-            <div className="flex items-center space-x-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            </div>
-            <div className="w-2 h-2 rounded-full bg-neutral-800 border border-neutral-700 shadow-inner" />
-          </div>
-        )}
-      </motion.div>
-    </div>
-  );
+  const { wifi, volume, notifications, openApp, setControlCenterOpen } = useDesktopStore();
+  const { playing, trackIndex, toggle, next } = useMediaStore();
+  const latest = notifications[0];
+  return <div className="fixed left-1/2 top-0 z-[9995] -translate-x-1/2 select-none">
+    <motion.div layout initial={false} animate={{ width: expanded ? 320 : playing ? 166 : 145, height: expanded ? 100 : 32 }} transition={{ type: 'spring', stiffness: 380, damping: 30 }} className="overflow-hidden rounded-b-[16px] bg-[#050506] text-white shadow-[0_5px_22px_rgba(0,0,0,.45)]">
+      {!expanded ? <button className="flex h-full w-full items-center justify-center px-3" onClick={() => setExpanded(true)} aria-label="Open Dynamic Island">{playing && <span className="flex items-center gap-2 truncate text-[10px] font-medium text-white/80"><span className="h-1.5 w-1.5 rounded-full bg-green-400" />{tracks[trackIndex].title}</span>}</button> : <div className="flex h-full flex-col justify-between p-3"><button onClick={() => setExpanded(false)} className="flex w-full items-center justify-between text-left"><span className="flex min-w-0 items-center gap-2 text-xs font-semibold">{playing ? <Music2 size={15} className="shrink-0 text-green-400" /> : <Bell size={15} className="shrink-0 text-blue-400" />}<span className="truncate">{playing ? tracks[trackIndex].title : latest?.title ?? 'Welcome to Raj’s desktop'}</span></span><span className="text-[10px] text-white/50">Close</span></button><p className="truncate pl-6 text-[11px] text-white/60">{playing ? tracks[trackIndex].artist : latest?.message ?? 'Explore the apps below'}</p><div className="flex items-center gap-2 pl-6"><button onClick={() => { openApp('spotify'); setExpanded(false); }} className="flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[10px]"><Music2 size={11} /> Music</button><button onClick={() => { setControlCenterOpen(true); setExpanded(false); }} className="flex items-center gap-1 rounded-full bg-white/15 px-2 py-1 text-[10px]">{wifi ? <Wifi size={11} /> : <WifiOff size={11} />} Wi-Fi</button><button aria-label={playing ? 'Pause music' : 'Play music'} onClick={toggle} className="ml-auto rounded-full bg-white/15 p-1">{playing ? <Pause size={13} /> : <Play size={13} />}</button><button aria-label="Next track" onClick={next} className="rounded-full bg-white/15 p-1"><SkipForward size={13} /></button><span className="flex items-center gap-1 text-[10px] text-white/60"><Volume2 size={11} />{volume}%</span></div></div>}
+    </motion.div>
+  </div>;
 };

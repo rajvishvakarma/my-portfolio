@@ -13,10 +13,11 @@ import {
 } from 'date-fns';
 
 export const CalendarWidget: React.FC = () => {
-  const [today, setToday] = React.useState<Date>(() => new Date(2024, 9, 24));
+  const [today, setToday] = React.useState<Date>(() => new Date(2026, 9, 24));
 
   React.useEffect(() => {
-    setToday(new Date());
+    const timer = window.setTimeout(() => setToday(new Date()), 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const start = startOfWeek(startOfMonth(today));

@@ -1,5 +1,7 @@
 # About This Site
 
-This site is inspired by macOS [Big Sur](https://www.apple.com/in/macos/big-sur/) and [Catalina](https://www.apple.com/bw/macos/catalina/), developed using [React](https://reactjs.org/), [Zustand](https://zustand-demo.pmnd.rs/) and [UnoCSS](https://uno.antfu.me/), and hosted on [Github Pages](https://pages.github.com/). Some of the icons are generated using [sindresorhus/file-icon-cli](https://github.com/sindresorhus/file-icon-cli).
+This portfolio is an interactive browser desktop inspired by macOS Tahoe. It presents Raj Vishvakarma's experience, projects, skills, and resume.
 
-The source code is hosted [here](https://github.com/aakashsharma003/macOS-Portfolio).
+The interface is built with Next.js, React, TypeScript, Tailwind CSS, Framer Motion, and Zustand.
+
+Browser controls such as the Wi-Fi and Bluetooth indicators are visual portfolio controls. They do not change device hardware settings.

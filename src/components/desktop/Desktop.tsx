@@ -14,6 +14,7 @@ import { CalendarWidget } from './CalendarWidget';
 import { WeatherWidget } from './WeatherWidget';
 import { WindowManager } from '../windows/WindowManager';
 import { MobileDesktop } from '../mobile/MobileDesktop';
+import { MediaPlayer } from './MediaPlayer';
 import { AppId } from '@/types/desktop';
 import { appsData } from '@/data/apps';
 
@@ -49,7 +50,8 @@ export const Desktop: React.FC = () => {
     return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
-  const handleDesktopClick = () => {
+  const handleDesktopClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) return;
     setSelectedDesktopIcon(null);
     setAppleMenuOpen(false);
     setActiveMenuDropdown(null);
@@ -69,6 +71,7 @@ export const Desktop: React.FC = () => {
     >
       {/* Background Wallpaper */}
       <Wallpaper />
+      <MediaPlayer />
 
       {/* Boot Animation Screen */}
       <BootScreen />

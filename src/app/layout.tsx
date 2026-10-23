@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
+
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rajvishvakarma.dev'),
-  title: 'Raj Vishvakarma — Software Engineer | macOS Portfolio',
+    title: 'Raj Vishvakarma — Software Engineer | macOS Portfolio',
   description:
-    'Interactive macOS desktop portfolio of Raj Vishvakarma, Software Engineer. Featuring custom window management, terminal emulator, project gallery, interactive skills explorer, and resume.',
+    'Interactive macOS desktop portfolio of Raj Vishvakarma, Software Engineer. Explore mobile apps, AI agents, automation projects, experience, and resume in an interactive desktop.',
   keywords: [
     'Raj Vishvakarma',
     'Software Engineer',
@@ -21,8 +15,8 @@ export const metadata: Metadata = {
     'Next.js',
     'React',
     'TypeScript',
-    'Full Stack Engineer',
-    'Bengaluru Developer',
+    'Mobile Software Engineer',
+    'Balaghat Developer',
   ],
   authors: [{ name: 'Raj Vishvakarma' }],
   icons: {
@@ -32,8 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Raj Vishvakarma — Software Engineer | macOS Portfolio',
     description:
-      'Explore the interactive macOS desktop portfolio of Raj Vishvakarma. Live terminal, window manager, and curated engineering projects.',
-    images: ['/wallpapers/macOS_Tahoe_Default.jpg'],
+      'Explore the interactive macOS desktop portfolio of Raj Vishvakarma. Projects in Android, Flutter, geospatial tracking, and automation.',
     type: 'website',
   },
 };
@@ -44,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className="h-full antialiased">
       <body className="h-full overflow-hidden bg-black select-none font-sans">
         {children}
       </body>
