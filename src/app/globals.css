@@ -1,26 +1,241 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ========================================
+   macOS 26 Tahoe & pdfx — Liquid Glass Design System
+   ======================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Liquid Glass Core */
+  --lg-bg-clear: rgba(255, 255, 255, 0.22);
+  --lg-bg-tinted: rgba(255, 255, 255, 0.42);
+  --lg-bg-solid: rgba(255, 255, 255, 0.78);
+  --lg-bg-dock: rgba(255, 255, 255, 0.28);
+  --lg-bg-menu: rgba(255, 255, 255, 0.65);
+  --lg-bg-topbar: rgba(255, 255, 255, 0.15);
+
+  --lg-blur: blur(60px) saturate(210%);
+  --lg-blur-heavy: blur(90px) saturate(240%);
+  --lg-blur-light: blur(35px) saturate(180%);
+  --lg-blur-menu: blur(50px) saturate(200%);
+
+  --lg-border: 0.5px solid rgba(255, 255, 255, 0.35);
+  --lg-border-strong: 0.5px solid rgba(255, 255, 255, 0.5);
+  --lg-border-subtle: 0.5px solid rgba(255, 255, 255, 0.18);
+
+  --lg-glow: 0 0 35px rgba(255, 255, 255, 0.12);
+  --lg-inner-highlight: inset 0 0.5px 0 rgba(255, 255, 255, 0.6);
+  --lg-inner-highlight-strong: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+  /* Shadows */
+  --shadow-window: 0 24px 80px rgba(0, 0, 0, 0.25), 0 8px 30px rgba(0, 0, 0, 0.15);
+  --shadow-window-focused: 0 28px 90px rgba(0, 0, 0, 0.32), 0 10px 35px rgba(0, 0, 0, 0.18);
+  --shadow-menu: 0 12px 40px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-dock: 0 10px 45px rgba(0, 0, 0, 0.22), 0 2px 14px rgba(0, 0, 0, 0.1);
+  --shadow-tooltip: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-dynamic-island: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 6px rgba(0, 0, 0, 0.2);
+
+  /* Radii */
+  --radius-window: 14px;
+  --radius-menu: 16px;
+  --radius-dock: 24px;
+  --radius-control: 14px;
+  --radius-button: 999px;
+
+  /* Typography */
+  --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  --font-avenir: 'Avenir Next', -apple-system, 'SF Pro Display', 'Inter', sans-serif;
+
+  --window-bar-bg: rgba(220, 230, 245, 0.7);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --lg-bg-clear: rgba(24, 24, 28, 0.45);
+  --lg-bg-tinted: rgba(32, 32, 38, 0.6);
+  --lg-bg-solid: rgba(24, 24, 28, 0.85);
+  --lg-bg-dock: rgba(22, 22, 26, 0.5);
+  --lg-bg-menu: rgba(28, 28, 34, 0.75);
+  --lg-bg-topbar: rgba(0, 0, 0, 0.3);
+
+  --lg-border: 0.5px solid rgba(255, 255, 255, 0.14);
+  --lg-border-strong: 0.5px solid rgba(255, 255, 255, 0.24);
+  --lg-border-subtle: 0.5px solid rgba(255, 255, 255, 0.08);
+
+  --lg-inner-highlight: inset 0 0.5px 0 rgba(255, 255, 255, 0.18);
+  --lg-inner-highlight-strong: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  --lg-glow: 0 0 40px rgba(0, 0, 0, 0.3);
+
+  --window-bar-bg: rgba(35, 45, 60, 0.65);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-system);
+  background: #000000;
+  color: #ffffff;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.28);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.48);
+  background-clip: content-box;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(0, 122, 255, 0.35);
+  color: inherit;
+}
+
+/* ========================================
+   pdfx Liquid Glass Bezel Utilities
+   ======================================== */
+.liquid-glass {
+  position: relative;
+  background: var(--lg-bg-clear);
+  backdrop-filter: var(--lg-blur-heavy);
+  -webkit-backdrop-filter: var(--lg-blur-heavy);
+  box-shadow: var(--shadow-window), var(--lg-inner-highlight);
+  border: var(--lg-border-subtle);
+  border-radius: var(--radius-window);
+}
+
+.liquid-glass-dock {
+  background: var(--lg-bg-dock);
+  backdrop-filter: var(--lg-blur-heavy);
+  -webkit-backdrop-filter: var(--lg-blur-heavy);
+  box-shadow: var(--shadow-dock), var(--lg-inner-highlight);
+  border: var(--lg-border);
+  border-top: var(--lg-border-strong);
+  border-radius: var(--radius-dock);
+}
+
+.liquid-glass-pill {
+  position: relative;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: var(--lg-blur-light);
+  -webkit-backdrop-filter: var(--lg-blur-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), inset 0 0.5px 0 rgba(255, 255, 255, 0.4);
+  border: var(--lg-border-subtle);
+  border-radius: var(--radius-button);
+}
+
+.liquid-glass-bezel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    to bottom left,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.25)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ========================================
+   Bear App Markdown Typography
+   ======================================== */
+.bear .markdown h1,
+.bear .markdown h2,
+.bear .markdown h3,
+.bear .markdown h4 {
+  font-weight: 700;
+  position: relative;
+  color: #1a1a1a;
+  margin-top: 1.75rem;
+}
+
+.dark .bear .markdown h1,
+.dark .bear .markdown h2,
+.dark .bear .markdown h3,
+.dark .bear .markdown h4 {
+  color: #f3f4f6;
+}
+
+.bear .markdown h1::before,
+.bear .markdown h2::before,
+.bear .markdown h3::before,
+.bear .markdown h4::before {
+  position: absolute;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9ca3af;
+  left: -2rem;
+  bottom: 0.15rem;
+}
+
+.bear .markdown h1 {
+  font-size: 1.85rem;
+  line-height: 2.25rem;
+}
+
+.bear .markdown h1::before {
+  content: "H1";
+}
+
+.bear .markdown h2 {
+  font-size: 1.45rem;
+  line-height: 1.85rem;
+}
+
+.bear .markdown h2::before {
+  content: "H2";
+}
+
+.bear .markdown h3::before {
+  content: "H3";
+}
+
+.bear .markdown p {
+  margin-top: 1.25rem;
+  line-height: 1.65;
+  color: #374151;
+}
+
+.dark .bear .markdown p {
+  color: #d1d5db;
+}
+
+.bear .markdown a {
+  color: #ef4444;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
