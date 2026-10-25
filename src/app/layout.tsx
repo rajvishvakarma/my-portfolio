@@ -102,7 +102,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  category: 'technology',
+    category: 'technology',
+  verification: {
+    google: '6_GKQVcHwk65PAOLT8OyyYRAwrcp_gBR6yMI',
+  },
 };
 
 const jsonLd = {
@@ -195,6 +198,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <head>
+        <meta name="google-site-verification" content="6_GKQVcHwk65PAOLT8OyyYRAwrcp_gBR6yMI" />
+        <meta name="google-site-verification" content="googled7bdd711e279a641" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" sizes="any" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
