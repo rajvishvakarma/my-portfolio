@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: '%s | Raj Vishvakarma',
   },
   description:
-    'Official interactive macOS portfolio and macOS web simulation by Raj Vishvakarma on GitHub (rajvishvakarma088-star/my-portfolio). Explore mobile apps, AI agents, and software engineering builds in a browser desktop.',
+    'Official interactive macOS portfolio and macOS web simulation by Raj Vishvakarma on GitHub (rajvishvakarma/my-portfolio). Explore mobile apps, AI agents, and software engineering builds in a browser desktop.',
   keywords: [
     'raj vishvakarma github',
     'raj vishwakarma github',
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
     'interactive developer portfolio',
     'nextjs macos portfolio',
     'my-portfolio github',
-    'rajvishvakarma088-star',
-    'rajvishvakarma088-star my-portfolio',
+    'rajvishvakarma',
+    'rajvishvakarma my-portfolio',
   ],
   authors: [
     {
       name: 'Raj Vishvakarma',
-      url: 'https://github.com/rajvishvakarma088-star',
+      url: 'https://github.com/rajvishvakarma',
     },
   ],
   creator: 'Raj Vishvakarma',
@@ -115,7 +115,7 @@ const jsonLd = {
       '@type': 'Person',
       '@id': 'https://raj-vishvakarma.vercel.app/#person',
       name: 'Raj Vishvakarma',
-      alternateName: ['Raj Vishwakarma', 'rajvishvakarma088-star'],
+      alternateName: ['Raj Vishwakarma', 'rajvishvakarma'],
       url: 'https://raj-vishvakarma.vercel.app',
       image: 'https://raj-vishvakarma.vercel.app/img/ui/avatar.jpg',
       jobTitle: 'Software Engineer',
@@ -136,8 +136,8 @@ const jsonLd = {
       },
       email: 'rajvishvakarma088@gmail.com',
       sameAs: [
-        'https://github.com/rajvishvakarma088-star',
-        'https://github.com/rajvishvakarma088-star/my-portfolio',
+        'https://github.com/rajvishvakarma',
+        'https://github.com/rajvishvakarma/my-portfolio',
         'https://metheuslab.com',
       ],
       description:
@@ -159,9 +159,9 @@ const jsonLd = {
     },
     {
       '@type': 'SoftwareSourceCode',
-      '@id': 'https://github.com/rajvishvakarma088-star/my-portfolio#code',
+      '@id': 'https://github.com/rajvishvakarma/my-portfolio#code',
       name: 'macOS Portfolio & macOS Simulation by Raj Vishvakarma',
-      codeRepository: 'https://github.com/rajvishvakarma088-star/my-portfolio',
+      codeRepository: 'https://github.com/rajvishvakarma/my-portfolio',
       url: 'https://raj-vishvakarma.vercel.app',
       programmingLanguage: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS'],
       author: {
@@ -216,15 +216,15 @@ export default function RootLayout({
             Welcome to the official <strong>macOS Portfolio</strong> and{' '}
             <strong>macOS Simulation</strong> website built by{' '}
             <strong>Raj Vishvakarma</strong>. Find the source code on{' '}
-            <a href="https://github.com/rajvishvakarma088-star/my-portfolio">
-              Raj Vishvakarma GitHub (rajvishvakarma088-star/my-portfolio)
+            <a href="https://github.com/rajvishvakarma/my-portfolio">
+              Raj Vishvakarma GitHub (rajvishvakarma/my-portfolio)
             </a>
             .
           </p>
           <p>
             Explore Raj Vishvakarma’s GitHub profile at{' '}
-            <a href="https://github.com/rajvishvakarma088-star">
-              github.com/rajvishvakarma088-star
+            <a href="https://github.com/rajvishvakarma">
+              github.com/rajvishvakarma
             </a>
             .
           </p>
@@ -259,14 +259,14 @@ export default function RootLayout({
           <p>Email: {profile.email}</p>
           <p>
             GitHub:{' '}
-            <a href="https://github.com/rajvishvakarma088-star">
-              https://github.com/rajvishvakarma088-star
+            <a href="https://github.com/rajvishvakarma">
+              https://github.com/rajvishvakarma
             </a>
           </p>
           <p>
             Repository:{' '}
-            <a href="https://github.com/rajvishvakarma088-star/my-portfolio">
-              https://github.com/rajvishvakarma088-star/my-portfolio
+            <a href="https://github.com/rajvishvakarma/my-portfolio">
+              https://github.com/rajvishvakarma/my-portfolio
             </a>
           </p>
         </div>

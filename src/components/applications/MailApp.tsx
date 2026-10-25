@@ -51,7 +51,7 @@ const INITIAL_EMAILS: Email[] = [
     avatar: '/icons/PngItem_4082636.png',
     subject: '[GitHub] Your repository starred by 12 developers',
     date: 'Yesterday',
-    excerpt: 'Your repository rajvishvakarma088-star/macos-portfolio received new stars and forks this week…',
+    excerpt: 'Your repository rajvishvakarma/macos-portfolio received new stars and forks this week…',
     body: `Hello Raj,\n\nGreat news! Your project repository has gained 12 new stars and 4 forks over the past 48 hours.\n\nKeep up the great open source work!\n\n- The GitHub Team`,
     unread: false,
   },

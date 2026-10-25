@@ -369,7 +369,7 @@ export const BearApp: React.FC = () => {
             </div>
 
             <a
-              href="https://github.com/rajvishvakarma088-star"
+              href="https://github.com/rajvishvakarma"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-semibold hover:opacity-90 transition-opacity"

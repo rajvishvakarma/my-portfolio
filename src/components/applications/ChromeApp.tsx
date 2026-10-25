@@ -32,7 +32,7 @@ interface ChromeTab {
 const CHROME_SHORTCUTS = [
   {
     title: 'GitHub',
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
     icon: '/img/sites/github.svg',
     isExternal: true,
   },
@@ -103,7 +103,7 @@ export const ChromeApp: React.FC = () => {
       const match = url.match(/(?:watch\?v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
       targetUrl = match ? `https://www.youtube.com/watch?v=${match[1]}` : 'https://www.youtube.com';
     } else if (url.toLowerCase().includes('github.com') || url.toLowerCase() === 'github') {
-      targetUrl = 'https://github.com/rajvishvakarma088-star';
+      targetUrl = 'https://github.com/rajvishvakarma';
     }
 
     setOmniboxInput(targetUrl === 'chrome://newtab' ? '' : targetUrl);
@@ -118,7 +118,7 @@ export const ChromeApp: React.FC = () => {
                 (targetUrl.includes('youtube')
                   ? 'YouTube'
                   : targetUrl.includes('github')
-                  ? 'GitHub - rajvishvakarma088-star'
+                  ? 'GitHub - rajvishvakarma'
                   : targetUrl.includes('google')
                   ? 'Google Search'
                   : targetUrl),

@@ -27,11 +27,11 @@ import { GitHubApp } from './GitHubApp';
 
 const CLEAN_FAVORITES = [
   { name: 'Google', url: 'https://www.google.com/webhp?igu=1' },
-  { name: 'GitHub', url: 'https://github.com/rajvishvakarma088-star' },
+  { name: 'GitHub', url: 'https://github.com/rajvishvakarma' },
   { name: 'Wikipedia', url: 'https://en.m.wikipedia.org/wiki/Main_Page' },
   { name: 'Apple', url: 'https://www.apple.com' },
   { name: 'My Resume', url: 'resume' },
-  { name: 'Metheus Lab', url: 'https://github.com/rajvishvakarma088-star' },
+  { name: 'Metheus Lab', url: 'https://github.com/rajvishvakarma' },
 ];
 
 export const SafariApp: React.FC = () => {
@@ -78,7 +78,7 @@ export const SafariApp: React.FC = () => {
     }
 
     if (trimmed.toLowerCase().includes('github.com') || trimmed.toLowerCase() === 'github') {
-      return 'https://github.com/rajvishvakarma088-star';
+      return 'https://github.com/rajvishvakarma';
     }
 
     if (trimmed.toLowerCase().includes('apple.com') || trimmed.toLowerCase() === 'apple') {

@@ -7,5 +7,5 @@ I build mobile and SaaS products at Metheus Lab. During my Flutter internship at
 My projects include Ultron AI, Just Convoy, an E-Commerce RPA Engine, and Dealzy.
 
 - Email: [rajvishvakarma088@gmail.com](mailto:rajvishvakarma088@gmail.com)
-- GitHub: [rajvishvakarma088-star](https://github.com/rajvishvakarma088-star)
+- GitHub: [rajvishvakarma](https://github.com/rajvishvakarma)
 - Resume: [PDF](/resume.pdf)

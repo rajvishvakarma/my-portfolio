@@ -13,7 +13,7 @@ export const profile: ProfileData = {
   ],
   location: 'Balaghat, Madhya Pradesh, India',
   email: 'rajvishvakarma088@gmail.com',
-  github: 'https://github.com/rajvishvakarma088-star',
+  github: 'https://github.com/rajvishvakarma',
   linkedin: '',
   website: 'https://metheuslab.com',
   interests: ['Android development', 'AI agents', 'Geospatial systems', 'Automation', 'Mobile engineering'],

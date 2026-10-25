@@ -19,7 +19,7 @@ export const VSCodeApp: React.FC = () => {
   const { theme } = useDesktopStore();
   const isDark = theme === 'dark';
 
-  const initialUrl = 'https://github1s.com/rajvishvakarma088-star/my-portfolio';
+  const initialUrl = 'https://github1s.com/rajvishvakarma/my-portfolio';
   const [currentUrl, setCurrentUrl] = useState(initialUrl);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,13 +39,13 @@ export const VSCodeApp: React.FC = () => {
         <div className="flex items-center gap-2">
           <Code2 size={16} className="text-[#007acc]" />
           <span className={`font-medium truncate ${isDark ? 'text-white' : 'text-neutral-900 font-semibold'}`}>
-            Visual Studio Code — rajvishvakarma088-star/my-portfolio
+            Visual Studio Code — rajvishvakarma/my-portfolio
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCurrentUrl('https://github1s.com/rajvishvakarma088-star/my-portfolio')}
+            onClick={() => setCurrentUrl('https://github1s.com/rajvishvakarma/my-portfolio')}
             className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
               currentUrl.includes('github1s')
                 ? 'bg-[#007acc] text-white'
@@ -75,7 +75,7 @@ export const VSCodeApp: React.FC = () => {
           </button>
 
           <a
-            href="https://github1s.com/rajvishvakarma088-star/my-portfolio"
+            href="https://github1s.com/rajvishvakarma/my-portfolio"
             target="_blank"
             rel="noreferrer"
             className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors ${

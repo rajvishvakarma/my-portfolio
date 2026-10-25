@@ -35,7 +35,7 @@ const PINNED_REPOS = [
     langColor: '#3178c6',
     stars: 18,
     forks: 4,
-    url: 'https://github.com/rajvishvakarma088-star/my-portfolio',
+    url: 'https://github.com/rajvishvakarma/my-portfolio',
   },
   {
     name: 'android-computer-use',
@@ -44,7 +44,7 @@ const PINNED_REPOS = [
     langColor: '#A97BFF',
     stars: 42,
     forks: 7,
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
   },
   {
     name: 'metheus-convoy',
@@ -53,7 +53,7 @@ const PINNED_REPOS = [
     langColor: '#00B4AB',
     stars: 31,
     forks: 5,
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
   },
   {
     name: 'automate-amaz',
@@ -62,7 +62,7 @@ const PINNED_REPOS = [
     langColor: '#3572A5',
     stars: 26,
     forks: 3,
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
   },
   {
     name: 'autonomous-drone-swarm',
@@ -71,7 +71,7 @@ const PINNED_REPOS = [
     langColor: '#f34b7d',
     stars: 38,
     forks: 9,
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
   },
   {
     name: 'edge-cv-telemetry',
@@ -80,7 +80,7 @@ const PINNED_REPOS = [
     langColor: '#dea584',
     stars: 29,
     forks: 6,
-    url: 'https://github.com/rajvishvakarma088-star',
+    url: 'https://github.com/rajvishvakarma',
   },
 ];
 
@@ -108,7 +108,7 @@ const CONTRIBUTION_COLORS = [
 ];
 
 export const GitHubApp: React.FC = () => {
-  const defaultUrl = 'https://github.com/rajvishvakarma088-star';
+  const defaultUrl = 'https://github.com/rajvishvakarma';
   const [urlInput, setUrlInput] = useState(defaultUrl);
   const [currentUrl, setCurrentUrl] = useState(defaultUrl);
   const [history, setHistory] = useState<string[]>([defaultUrl]);
@@ -139,7 +139,7 @@ export const GitHubApp: React.FC = () => {
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!urlInput.trim()) return;
-    if (urlInput.includes('github.com/rajvishvakarma088-star') || urlInput === 'github.com') {
+    if (urlInput.includes('github.com/rajvishvakarma') || urlInput === 'github.com') {
       setViewMode('profile');
     } else {
       setViewMode('web');
@@ -290,7 +290,7 @@ export const GitHubApp: React.FC = () => {
               <svg className="w-7 h-7 fill-current text-neutral-900 dark:text-white" viewBox="0 0 16 16">
                 <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
               </svg>
-              <span className="text-sm font-semibold tracking-tight">rajvishvakarma088-star</span>
+              <span className="text-sm font-semibold tracking-tight">rajvishvakarma</span>
 
               <div className="hidden sm:flex items-center gap-2 rounded-md border border-[#d0d7de] bg-white px-2.5 py-1 text-xs text-neutral-500 shadow-2xs dark:border-[#30363d] dark:bg-[#0d1117]">
                 <Search size={12} />
@@ -361,7 +361,7 @@ export const GitHubApp: React.FC = () => {
                 <h1 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
                   {profile.name}
                 </h1>
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">@rajvishvakarma088-star</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">@rajvishvakarma</p>
                 <p className="mt-3 text-xs leading-5 text-neutral-700 dark:text-neutral-300">
                   {profile.tagline}
                 </p>

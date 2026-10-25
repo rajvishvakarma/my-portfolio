@@ -115,9 +115,9 @@ export const Spotlight: React.FC = () => {
     },
     {
       id: 'clip-github',
-      title: 'github.com/rajvishvakarma088-star',
+      title: 'github.com/rajvishvakarma',
       subtitle: 'GitHub Profile · Click to Copy',
-      text: 'https://github.com/rajvishvakarma088-star',
+      text: 'https://github.com/rajvishvakarma',
     },
     {
       id: 'clip-portfolio',

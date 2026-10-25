@@ -237,7 +237,7 @@ export const MenuDropdown: React.FC<MenuDropdownProps> = ({ menu }) => {
             <span>macOS Portfolio Guide</span>
           </button>
           <a
-            href="https://github.com/rajvishvakarma088-star"
+            href="https://github.com/rajvishvakarma"
             target="_blank"
             rel="noreferrer"
             className={itemClass}

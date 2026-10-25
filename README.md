@@ -1,7 +1,7 @@
 #  macOS Portfolio & macOS Simulation — Raj Vishvakarma (GitHub)
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-raj--vishvakarma.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://raj-vishvakarma.vercel.app)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-rajvishvakarma088--star%2Fmy--portfolio-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rajvishvakarma088-star/my-portfolio)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-rajvishvakarma088--star%2Fmy--portfolio-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rajvishvakarma/my-portfolio)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.4-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
@@ -11,15 +11,15 @@ An interactive, high-fidelity **macOS portfolio** and **macOS web simulation** c
 Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Framer Motion**, **Zustand**, and **Lucide Icons**.
 
 - 🌐 **Live Website**: [https://raj-vishvakarma.vercel.app](https://raj-vishvakarma.vercel.app)
-- 🐙 **GitHub Profile**: [https://github.com/rajvishvakarma088-star](https://github.com/rajvishvakarma088-star)
-- 📦 **Source Code**: [https://github.com/rajvishvakarma088-star/my-portfolio](https://github.com/rajvishvakarma088-star/my-portfolio)
+- 🐙 **GitHub Profile**: [https://github.com/rajvishvakarma](https://github.com/rajvishvakarma)
+- 📦 **Source Code**: [https://github.com/rajvishvakarma/my-portfolio](https://github.com/rajvishvakarma/my-portfolio)
 
 ---
 
 ## 🔍 Overview & Search Tags
 - **macOS Portfolio / Mac Portfolio**: Interactive developer portfolio designed as a full-featured macOS operating system.
 - **macOS Simulation / Mac OS Web Simulator**: Authentic browser-based desktop environment with multi-window stacking, drag & drop, dock magnification, and menu bars.
-- **Developer**: [Raj Vishvakarma](https://github.com/rajvishvakarma088-star) (Software Engineer · AI & Robotics).
+- **Developer**: [Raj Vishvakarma](https://github.com/rajvishvakarma) (Software Engineer · AI & Robotics).
 
 ---
 
@@ -115,7 +115,7 @@ Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, **F
 ### 1. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/rajvishvakarma088-star/my-portfolio.git
+git clone https://github.com/rajvishvakarma/my-portfolio.git
 
 # Navigate into the project directory
 cd my-portfolio
@@ -155,7 +155,7 @@ Live deployment is accessible at: **[https://raj-vishvakarma.vercel.app](https:/
 ## 👤 Author
 
 **Raj Vishvakarma**
-- **GitHub**: [@rajvishvakarma088-star](https://github.com/rajvishvakarma088-star)
+- **GitHub**: [@rajvishvakarma](https://github.com/rajvishvakarma)
 - **Website**: [raj-vishvakarma.vercel.app](https://raj-vishvakarma.vercel.app)
 - **Email**: [rajvishvakarma088@gmail.com](mailto:rajvishvakarma088@gmail.com)
 
