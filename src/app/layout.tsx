@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Raj Vishvakarma' }],
   icons: {
     icon: '/img/icons/finder.png',
-    apple: '/img/icons/macos-tahoe.png',
+    apple: '/img/icons/macos-27.png',
   },
   openGraph: {
     title: 'Raj Vishvakarma — Software Engineer | macOS Portfolio',

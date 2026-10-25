@@ -12,8 +12,12 @@ import {
   isSameMonth,
 } from 'date-fns';
 
+import { useDesktopStore } from '@/stores/useDesktopStore';
+
 export const CalendarWidget: React.FC = () => {
-  const [today, setToday] = React.useState<Date>(() => new Date(2026, 9, 24));
+  const { theme } = useDesktopStore();
+  const isDark = theme === 'dark';
+  const [today, setToday] = React.useState<Date>(() => new Date());
 
   React.useEffect(() => {
     const timer = window.setTimeout(() => setToday(new Date()), 0);
@@ -26,7 +30,13 @@ export const CalendarWidget: React.FC = () => {
   const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   return (
-    <div className="w-48 p-3.5 rounded-2xl bg-black/45 dark:bg-black/60 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.4)] select-none text-white">
+    <div
+      className={`w-56 md:w-60 min-h-[210px] p-4 rounded-2xl backdrop-blur-2xl transition-all duration-300 select-none flex flex-col justify-between ${
+        isDark
+          ? 'bg-black/60 border border-white/15 text-white shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+          : 'bg-white/80 border border-black/10 text-slate-800 shadow-[0_8px_32px_rgba(0,0,0,0.12)]'
+      }`}
+    >
       {/* Month header — red, uppercase, SF style */}
       <div className="mb-2">
         <span className="text-[11px] font-bold text-[#FF3B30] uppercase tracking-wider block">
@@ -37,7 +47,12 @@ export const CalendarWidget: React.FC = () => {
       {/* Day of week labels */}
       <div className="grid grid-cols-7 mb-1 text-center">
         {dayLabels.map((d, i) => (
-          <div key={i} className="text-[9px] font-semibold text-white/40 pb-1">
+          <div
+            key={i}
+            className={`text-[9px] font-semibold pb-1 ${
+              isDark ? 'text-white/40' : 'text-slate-400'
+            }`}
+          >
             {d}
           </div>
         ))}
@@ -55,8 +70,12 @@ export const CalendarWidget: React.FC = () => {
                 isToday
                   ? 'bg-[#FF3B30] text-white font-bold shadow-xs'
                   : inMonth
-                  ? 'text-white/85 font-medium'
-                  : 'text-white/20'
+                  ? isDark
+                    ? 'text-white/85 font-medium hover:bg-white/10'
+                    : 'text-slate-800 font-medium hover:bg-black/5'
+                  : isDark
+                  ? 'text-white/20'
+                  : 'text-slate-300'
               }`}
             >
               {format(day, 'd')}

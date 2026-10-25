@@ -283,7 +283,21 @@ export const ProjectsApp: React.FC = () => {
 
                         <div className="flex items-center justify-between text-xs text-blue-600 dark:text-blue-400 font-medium pt-2 border-t border-black/5 dark:border-white/5">
                           <span>View Details & Specs</span>
-                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                          <div className="flex items-center gap-2">
+                            {proj.githubUrl && (
+                              <a
+                                href={proj.githubUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-neutral-700 dark:text-neutral-300 transition-colors"
+                                title="View on GitHub"
+                              >
+                                <GitHubIcon size={14} />
+                              </a>
+                            )}
+                            <span className="group-hover:translate-x-1 transition-transform">→</span>
+                          </div>
                         </div>
                       </div>
                     </div>

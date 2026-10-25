@@ -25,7 +25,14 @@ export type AppId =
   | 'skills'
   | 'experience'
   | 'resume'
-  | 'contact';
+  | 'contact'
+  | 'chrome'
+  | 'calendar'
+  | 'reminders'
+  | 'contacts'
+  | 'phone'
+  | 'textedit'
+  | 'youtube';
 
 export interface WindowState {
   id: AppId;

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large media assets (>5MB wallpapers and audio MP3s)
+/public/audio/
+/public/Wallpaper/*
+!/public/Wallpaper/thumbs/
+

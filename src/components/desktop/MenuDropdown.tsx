@@ -1,9 +1,14 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useDesktopStore } from '@/stores/useDesktopStore';
 
-export const MenuDropdown: React.FC = () => {
+interface MenuDropdownProps {
+  menu?: string;
+}
+
+export const MenuDropdown: React.FC<MenuDropdownProps> = ({ menu }) => {
   const {
     activeMenuDropdown,
     setActiveMenuDropdown,
@@ -17,165 +22,217 @@ export const MenuDropdown: React.FC = () => {
     addNotification,
   } = useDesktopStore();
 
-  if (!activeMenuDropdown) return null;
+  const currentMenu = menu || activeMenuDropdown;
+  if (!currentMenu) return null;
+
+  const itemClass =
+    'w-full flex items-center justify-between px-3 py-1.5 text-left rounded-xl text-[13px] text-white transition-colors hover:bg-white/15 dark:hover:bg-white/15 group select-none';
+  const shortcutClass = 'text-[11px] text-white/50 font-mono group-hover:text-white/80';
+  const dividerClass = 'my-1 border-t border-white/15';
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -6, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -4, scale: 0.98 }}
+      transition={{ duration: 0.12, ease: 'easeOut' }}
       onClick={(e) => e.stopPropagation()}
-      className="mac-popover fixed top-8 left-14 w-52 rounded-xl p-1.5 z-[9999] text-xs text-neutral-800 dark:text-neutral-200 select-none space-y-0.5"
+      className="mac-status-menu absolute top-full left-0 mt-1.5 min-w-[220px] w-56 rounded-[20px] p-2 z-[9999] text-xs text-white select-none space-y-0.5 shadow-2xl"
     >
-      {activeMenuDropdown === 'File' && (
+      {currentMenu === 'File' && (
         <>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               openApp('finder');
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>New Finder Window</span>
-            <span className="text-[10px] opacity-60">⌘N</span>
+            <span className={shortcutClass}>⌘N</span>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (activeWindowId) closeWindow(activeWindowId);
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Close Active Window</span>
-            <span className="text-[10px] opacity-60">⌘W</span>
+            <span className={shortcutClass}>⌘W</span>
           </button>
+          <div className={dividerClass} />
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               window.print();
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
-            <span>Print...</span>
-            <span className="text-[10px] opacity-60">⌘P</span>
+            <span>Print…</span>
+            <span className={shortcutClass}>⌘P</span>
           </button>
         </>
       )}
 
-      {activeMenuDropdown === 'Edit' && (
+      {currentMenu === 'Edit' && (
         <>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               addNotification('Edit', 'Undo simulated.');
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Undo</span>
-            <span className="text-[10px] opacity-60">⌘Z</span>
+            <span className={shortcutClass}>⌘Z</span>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               addNotification('Edit', 'Redo simulated.');
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Redo</span>
-            <span className="text-[10px] opacity-60">⇧⌘Z</span>
+            <span className={shortcutClass}>⇧⌘Z</span>
           </button>
+          <div className={dividerClass} />
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               addNotification('Edit', 'Text copied to clipboard.');
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Copy</span>
-            <span className="text-[10px] opacity-60">⌘C</span>
+            <span className={shortcutClass}>⌘C</span>
           </button>
         </>
       )}
 
-      {activeMenuDropdown === 'View' && (
+      {currentMenu === 'View' && (
         <>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               toggleTheme();
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
-            <span>Toggle Dark Appearance</span>
-            <span className="text-[10px] opacity-60">⌥⌘T</span>
+            <span>Toggle Dark Mode</span>
+            <span className={shortcutClass}>⌥⌘T</span>
           </button>
+          <div className={dividerClass} />
           <button
-            onClick={() => {
-              setWallpaper('tahoe-aerial');
+            onClick={(e) => {
+              e.stopPropagation();
+              setWallpaper('golden-gate');
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
-            <span>Switch to Tahoe Aerial</span>
+            <span>Switch to Golden Gate Daylight</span>
           </button>
           <button
-            onClick={() => {
-              setWallpaper('tahoe-beach-day');
+            onClick={(e) => {
+              e.stopPropagation();
+              setWallpaper('golden-gate-sunset');
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
-            <span>Switch to Beach Day</span>
+            <span>Switch to Golden Gate Sunset</span>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setWallpaper('golden-gate-night');
+              setActiveMenuDropdown(null);
+            }}
+            className={itemClass}
+          >
+            <span>Switch to Golden Gate Night</span>
           </button>
         </>
       )}
 
-      {activeMenuDropdown === 'Window' && (
+      {currentMenu === 'Window' && (
         <>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (activeWindowId) minimizeWindow(activeWindowId);
               setActiveMenuDropdown(null);
             }}
-            className="w-full flex justify-between px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Minimize</span>
-            <span className="text-[10px] opacity-60">⌘M</span>
+            <span className={shortcutClass}>⌘M</span>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (activeWindowId) maximizeWindow(activeWindowId);
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Zoom / Fullscreen</span>
           </button>
+          <div className={dividerClass} />
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               openApp('about');
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Bring About to Front</span>
           </button>
         </>
       )}
 
-      {activeMenuDropdown === 'Go' && (
+      {currentMenu === 'Go' && (
         <>
-          {([['Recents', 'finder'], ['Projects', 'projects'], ['Documents', 'resume'], ['Applications', 'app-store']] as const).map(([label, appId]) => (
-            <button key={label} onClick={() => { openApp(appId); setActiveMenuDropdown(null); }} className="w-full rounded-md px-2.5 py-1 text-left hover:bg-blue-600 hover:text-white">{label}</button>
+          {([
+            ['Recents', 'finder'],
+            ['Projects', 'projects'],
+            ['Documents', 'resume'],
+            ['Applications', 'app-store'],
+          ] as const).map(([label, appId]) => (
+            <button
+              key={label}
+              onClick={(e) => {
+                e.stopPropagation();
+                openApp(appId);
+                setActiveMenuDropdown(null);
+              }}
+              className={itemClass}
+            >
+              <span>{label}</span>
+            </button>
           ))}
         </>
       )}
 
-      {activeMenuDropdown === 'Help' && (
+      {currentMenu === 'Help' && (
         <>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               openApp('terminal');
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>macOS Portfolio Guide</span>
           </button>
@@ -183,21 +240,24 @@ export const MenuDropdown: React.FC = () => {
             href="https://github.com/rajvishvakarma088-star"
             target="_blank"
             rel="noreferrer"
-            className="block w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>GitHub Repository</span>
+            <span className={shortcutClass}>↗</span>
           </a>
+          <div className={dividerClass} />
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               openApp('contact');
               setActiveMenuDropdown(null);
             }}
-            className="w-full px-2.5 py-1 text-left rounded-md hover:bg-blue-600 hover:text-white transition-colors"
+            className={itemClass}
           >
             <span>Contact Raj</span>
           </button>
         </>
       )}
-    </div>
+    </motion.div>
   );
 };

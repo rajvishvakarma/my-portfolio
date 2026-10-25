@@ -33,6 +33,21 @@ import { TrashApp } from '../applications/TrashApp';
 import { SettingsApp } from '../applications/SettingsApp';
 import { WorkspaceApps } from '../applications/WorkspaceApps';
 import { CalculatorApp } from '../applications/CalculatorApp';
+import { ChromeApp } from '../applications/ChromeApp';
+import { SafariApp } from '../applications/SafariApp';
+import { MusicWorkspace } from '../applications/MusicWorkspace';
+import { VSCodeApp } from '../applications/VSCodeApp';
+import { AppStoreApp } from '../applications/AppStoreApp';
+import { PhotosApp } from '../applications/PhotosApp';
+import { MessagesApp } from '../applications/MessagesApp';
+import { FaceTimeApp } from '../applications/FaceTimeApp';
+import { MailApp } from '../applications/MailApp';
+import { MapsApp } from '../applications/MapsApp';
+import { CalendarApp } from '../applications/CalendarApp';
+import { ContactsApp } from '../applications/ContactsApp';
+import { RemindersApp } from '../applications/RemindersApp';
+import { PhoneApp } from '../applications/PhoneApp';
+import { TextEditApp } from '../applications/TextEditApp';
 
 export const MobileDesktop: React.FC = () => {
   const {
@@ -43,6 +58,11 @@ export const MobileDesktop: React.FC = () => {
     theme,
     toggleTheme,
     wifi,
+    controlCenterOpen,
+    setControlCenterOpen,
+    widgetsOpen,
+    setWidgetsOpen,
+    closeAllMenus,
   } = useDesktopStore();
 
   const { timeString } = useClock();
@@ -73,6 +93,38 @@ export const MobileDesktop: React.FC = () => {
         return <TerminalApp />;
       case 'github':
         return <GitHubApp />;
+      case 'chrome':
+        return <ChromeApp />;
+      case 'safari':
+        return <SafariApp />;
+      case 'music':
+        return <MusicWorkspace variant="music" />;
+      case 'spotify':
+        return <MusicWorkspace variant="spotify" />;
+      case 'vscode':
+        return <VSCodeApp />;
+      case 'app-store':
+        return <AppStoreApp />;
+      case 'photos':
+        return <PhotosApp />;
+      case 'messages':
+        return <MessagesApp />;
+      case 'facetime':
+        return <FaceTimeApp />;
+      case 'mail':
+        return <MailApp />;
+      case 'maps':
+        return <MapsApp />;
+      case 'calendar':
+        return <CalendarApp />;
+      case 'contacts':
+        return <ContactsApp />;
+      case 'reminders':
+        return <RemindersApp />;
+      case 'phone':
+        return <PhoneApp />;
+      case 'textedit':
+        return <TextEditApp />;
       case 'trash':
         return <TrashApp />;
       case 'settings':
@@ -84,24 +136,50 @@ export const MobileDesktop: React.FC = () => {
     }
   };
 
-  const mobileApps = appsData;
+  // Filter out YouTube from mobile apps
+  const mobileApps = appsData.filter((app) => app.id !== 'youtube');
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between overflow-hidden text-white select-none">
+    <div
+      onClick={closeAllMenus}
+      className="relative w-full h-full flex flex-col justify-between overflow-hidden text-white select-none"
+    >
       {/* Mobile Top Status Bar */}
-      <div className="h-10 px-5 flex items-center justify-between text-xs font-semibold z-50 bg-black/20 backdrop-blur-md">
-        <span>{timeString || '9:41'}</span>
-        <div className="flex items-center space-x-2">
-          <Wifi size={14} className={wifi ? 'opacity-100' : 'opacity-40'} />
-          <Battery size={16} className="text-emerald-400 fill-emerald-400" />
-        </div>
+      <div className="h-10 px-4 flex items-center justify-between text-xs font-semibold z-50 bg-black/25 backdrop-blur-md border-b border-white/5">
+        {/* Left side: Time + indicator that opens Widgets / Notification section */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setWidgetsOpen(!widgetsOpen);
+          }}
+          className="flex items-center gap-1.5 py-1 px-2.5 -ml-1.5 rounded-full bg-white/5 hover:bg-white/15 active:scale-95 transition-all text-xs font-semibold cursor-pointer border border-white/10"
+          title="Open Widgets & Notifications"
+          aria-label="Open Widgets and Notifications"
+        >
+          <span>{timeString || '9:41'}</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+        </button>
+
+        {/* Right side: Wifi & Battery that opens Control Center */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setControlCenterOpen(!controlCenterOpen);
+          }}
+          className="flex items-center space-x-2 py-1 px-2.5 -mr-1.5 rounded-full bg-white/5 hover:bg-white/15 active:scale-95 transition-all cursor-pointer border border-white/10"
+          title="Open Control Center"
+          aria-label="Open Control Center"
+        >
+          <Wifi size={13} className={wifi ? 'opacity-100' : 'opacity-40'} />
+          <Battery size={15} className="text-emerald-400 fill-emerald-400" />
+        </button>
       </div>
 
       {/* Main Home Screen Grid (When no app is currently open full-screen) */}
-      <div className="flex-1 overflow-y-auto p-6 flex flex-col justify-center space-y-8 z-10">
+      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-8 space-y-5 z-10 no-scrollbar">
         {/* Profile Card Widget on Home Screen */}
-        <div className="p-4 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 flex items-center space-x-4 shadow-xl">
-          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/20 relative shrink-0">
+        <div className="p-4 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 flex items-center space-x-3.5 shadow-xl">
+          <div className="w-13 h-13 rounded-2xl overflow-hidden border border-white/20 relative shrink-0">
             <Image src={profile.avatar} alt={profile.name} fill className="object-cover" />
           </div>
           <div className="min-w-0 flex-1">
@@ -110,21 +188,24 @@ export const MobileDesktop: React.FC = () => {
             <p className="text-[11px] text-neutral-300 truncate mt-0.5">{profile.location}</p>
           </div>
           <button
-            onClick={toggleTheme}
-            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTheme();
+            }}
+            className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors active:scale-90"
             title="Toggle theme"
           >
-            {theme === 'dark' ? <Moon size={15} /> : <Sun size={15} />}
+            {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
         </div>
 
         {/* Mobile App Grid */}
-        <div className="grid grid-cols-4 gap-y-6 gap-x-2 justify-items-center">
+        <div className="grid grid-cols-4 gap-y-5 gap-x-2 justify-items-center">
           {mobileApps.map((app) => (
             <button
               key={app.id}
               onClick={() => openApp(app.id)}
-              className="flex flex-col items-center space-y-1.5 focus:outline-none group active:scale-95 transition-transform"
+              className="flex flex-col items-center space-y-1.5 focus:outline-none group active:scale-90 transition-transform"
             >
               <div className="w-14 h-14 rounded-2xl p-2 bg-black/30 backdrop-blur-xl border border-white/15 shadow-md flex items-center justify-center relative">
                 <Image src={app.icon} alt={app.dockTitle} fill className="object-contain p-2" />
@@ -141,7 +222,8 @@ export const MobileDesktop: React.FC = () => {
       <div className="p-4 flex justify-center z-20">
         <div className="px-5 py-2.5 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/15 flex items-center space-x-5 shadow-2xl">
           {['finder', 'about', 'projects', 'contact'].map((appId) => {
-            const app = appsData.find((a) => a.id === appId)!;
+            const app = appsData.find((a) => a.id === appId);
+            if (!app) return null;
             return (
               <button
                 key={app.id}
@@ -169,7 +251,7 @@ export const MobileDesktop: React.FC = () => {
             <div className="h-12 px-4 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-neutral-100/90 dark:bg-[#242424]/90 backdrop-blur-md shrink-0">
               <button
                 onClick={() => closeWindow(activeWindow.id)}
-                className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 font-semibold text-xs active:opacity-70"
+                className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 font-semibold text-xs active:opacity-70 py-1"
               >
                 <ChevronLeft size={18} />
                 <span>Home</span>
@@ -184,14 +266,15 @@ export const MobileDesktop: React.FC = () => {
 
               <button
                 onClick={() => closeWindow(activeWindow.id)}
-                className="p-1 rounded-full bg-black/5 dark:bg-white/10 text-neutral-500"
+                className="p-1 rounded-full bg-black/5 dark:bg-white/10 text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+                title="Close"
               >
                 <X size={15} />
               </button>
             </div>
 
             {/* Mobile App Body */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden relative">
               {renderActiveAppContent(activeWindow.id)}
             </div>
           </motion.div>

@@ -140,13 +140,13 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
   return (
     <motion.div
       ref={frameRef}
-      initial={{ opacity: 0, scale: 0.975, y: 8 }}
+      initial={{ opacity: 0, scale: 0.92, y: 14 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.985, y: 5, transition: { duration: 0.12, ease: 'easeIn' } }}
-      transition={{ duration: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
+      exit={{ opacity: 0, scale: 0.92, y: 10, transition: { duration: 0.16, ease: [0.32, 0, 0.67, 0] } }}
+      transition={{ duration: 0.22, ease: [0.2, 0.88, 0.25, 1] }}
       onMouseDown={(event) => {
         focusWindow(id);
-        if (id === 'finder' && (event.target as HTMLElement).closest('[data-window-drag]') && !(event.target as HTMLElement).closest('button, input')) handleTitleBarMouseDown(event);
+        if ((id === 'finder' || id === 'safari') && (event.target as HTMLElement).closest('[data-window-drag]') && !(event.target as HTMLElement).closest('button, input')) handleTitleBarMouseDown(event);
       }}
       style={{
         left: isMaximized ? 0 : position.x,
@@ -163,15 +163,17 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
         border: isMaximized ? 'none' : 'var(--lg-border-subtle)',
         borderTop: isMaximized ? 'none' : isFocused ? '0.5px solid rgba(255,255,255,0.5)' : '0.5px solid rgba(255,255,255,0.3)',
       }}
-      className={`mac-window fixed overflow-hidden flex flex-col select-none ${
+      className={`mac-window fixed pointer-events-auto overflow-hidden flex flex-col select-none ${
         isMaximized ? 'rounded-none' : 'rounded-[22px]'
       }`}
     >
       {/* Liquid Glass Title Bar */}
-      {id !== 'finder' && <div
+      {id !== 'finder' && id !== 'safari' && <div
         onMouseDown={handleTitleBarMouseDown}
         onDoubleClick={() => maximizeWindow(id)}
-        className="mac-window-toolbar h-[42px] shrink-0 px-3.5 flex items-center justify-between cursor-grab active:cursor-grabbing select-none"
+        className={`mac-window-toolbar h-[42px] shrink-0 px-3.5 flex items-center justify-between cursor-default select-none transition-colors ${
+          id === 'bear' ? '!bg-[#70a4c2] dark:!bg-[#4b7a97] !border-b !border-black/15 text-white shadow-xs' : ''
+        }`}
       >
         {/* Left: Traffic Lights */}
         <div className="flex items-center w-24">
@@ -180,19 +182,36 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
 
         {/* Center: Title */}
         <div className="flex items-center space-x-1.5 truncate pointer-events-none">
-          <span
-            className={`text-[13px] font-semibold tracking-tight truncate ${
-              isFocused
-                ? 'text-neutral-800 dark:text-neutral-100'
-                : 'text-neutral-500 dark:text-neutral-400'
-            }`}
-          >
-            {title}
-          </span>
+          {id === 'terminal' ? (
+            <div className="flex items-center space-x-1.5 text-neutral-300">
+              <span className="text-blue-400 text-sm">📁</span>
+              <span className="text-[12px] font-medium font-mono text-neutral-200">
+                rajvishvakarma — -zsh — 80×24
+              </span>
+            </div>
+          ) : (
+            <span
+              className={`text-[13px] font-semibold tracking-tight truncate ${
+                id === 'bear'
+                  ? 'text-white drop-shadow-xs'
+                  : isFocused
+                  ? 'text-neutral-800 dark:text-neutral-100'
+                  : 'text-neutral-500 dark:text-neutral-400'
+              }`}
+            >
+              {title}
+            </span>
+          )}
         </div>
 
-        {/* Right dummy spacer */}
-        <div className="w-24" />
+        {/* Right dummy spacer / terminal split button */}
+        <div className="w-24 flex justify-end items-center pr-1">
+          {id === 'terminal' && (
+            <div className="w-3.5 h-3.5 border border-white/25 rounded-xs flex items-center justify-center opacity-60">
+              <div className="w-[1px] h-full bg-white/30" />
+            </div>
+          )}
+        </div>
       </div>}
 
       {/* Window Content Shell */}
@@ -204,11 +223,9 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
       {!isMaximized && (
         <div
           onMouseDown={handleResizeMouseDown}
-          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize flex items-end justify-end p-0.5 z-20 group"
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-20"
           title="Resize window"
-        >
-          <div className="w-1.5 h-1.5 border-r border-b border-neutral-400 dark:border-neutral-500 group-hover:border-blue-500" />
-        </div>
+        />
       )}
     </motion.div>
   );

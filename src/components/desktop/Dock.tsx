@@ -9,9 +9,9 @@ import { appsData } from '@/data/apps';
 import { useDesktopStore } from '@/stores/useDesktopStore';
 
 const dockOrder: AppId[] = [
-  'finder', 'bear', 'typora', 'safari', 'vscode', 'facetime', 'terminal',
-  'spotify', 'siri', 'calculator', 'settings', 'notes', 'music', 'maps',
-  'messages', 'photos', 'clock', 'mail', 'app-store', 'github',
+  'finder', 'safari', 'messages', 'mail', 'maps', 'photos', 'facetime', 'phone',
+  'calendar', 'contacts', 'reminders', 'notes', 'music', 'spotify', 'bear', 'typora',
+  'vscode', 'terminal', 'calculator', 'settings', 'app-store', 'github', 'trash',
 ];
 const dockApps = dockOrder.map((id) => appsData.find((app) => app.id === id)!).filter(Boolean);
 
@@ -99,6 +99,7 @@ const DockItem: React.FC<DockItemProps> = ({ id, title, icon, mouseX, baseSize }
           src={icon}
           alt={title}
           fill
+          unoptimized
           sizes="50px"
           className="object-contain drop-shadow-[0_4px_7px_rgba(0,0,0,0.2)] select-none"
         />
@@ -135,7 +136,7 @@ export const Dock: React.FC = () => {
         className="liquid-glass-dock pointer-events-auto flex max-w-full items-end gap-[3px] overflow-visible rounded-[24px] px-2.5 py-1.5"
       >
         {dockApps.map((app) => <React.Fragment key={app.id}>
-          {app.id === 'github' && <span aria-hidden="true" className="mx-1 h-9 w-px shrink-0 self-center bg-neutral-700/25 dark:bg-white/30" />}
+          {(app.id === 'github' || app.id === 'trash') && <span aria-hidden="true" className="mx-1 h-9 w-px shrink-0 self-center bg-neutral-700/25 dark:bg-white/30" />}
           <DockItem id={app.id} title={app.dockTitle} icon={app.icon} mouseX={mouseX} baseSize={baseSize} />
         </React.Fragment>)}
       </motion.div>

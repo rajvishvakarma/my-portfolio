@@ -35,18 +35,18 @@ export const AboutThisMacModal: React.FC = () => {
 
         {/* Content */}
         <div className="p-6 flex flex-col items-center text-center space-y-4">
-          <div className="w-20 h-20 relative">
+          <div className="w-24 h-24 relative">
             <Image
-              src="/img/icons/macos-tahoe.png"
-              alt="macOS Tahoe"
+              src="/img/icons/macos-27.png"
+              alt="macOS 27 Golden Gate"
               fill
-              className="object-contain drop-shadow-md"
+              className="object-contain drop-shadow-lg"
             />
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-neutral-900 dark:text-white">Raj’s macOS Portfolio</h2>
-            <p className="text-xs text-neutral-500">A browser desktop inspired by macOS Tahoe</p>
+            <h2 className="text-xl font-bold text-neutral-900 dark:text-white">macOS 27 Golden Gate</h2>
+            <p className="text-xs text-neutral-500 mt-0.5">Version 27.0 · MacBook Pro 16″ (Apple M3 Max)</p>
           </div>
 
           <div className="w-full bg-black/5 dark:bg-white/5 rounded-xl p-3 text-left space-y-2 text-xs border border-black/5 dark:border-white/5">

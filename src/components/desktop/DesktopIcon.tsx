@@ -29,6 +29,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, title, icon, index
 
   return (
     <motion.div
+      data-desktop-icon="true"
       drag
       dragMomentum={false}
       onClick={handleClick}

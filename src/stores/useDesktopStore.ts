@@ -22,14 +22,24 @@ interface DesktopStoreState {
   bluetooth: boolean;
   focusMode: boolean;
   controlCenterOpen: boolean;
+  widgetsOpen: boolean;
   appleMenuOpen: boolean;
   activeMenuDropdown: string | null;
   selectedDesktopIcon: string | null;
+  statusMenu: 'wifi' | 'battery' | null;
   bootCompleted: boolean;
+  isLocked: boolean;
   notifications: NotificationItem[];
   aboutThisMacOpen: boolean;
+  isMobile: boolean;
+  spotlightOpen: boolean;
 
   // Actions
+  setIsMobile: (isMobile: boolean) => void;
+  setSpotlightOpen: (open: boolean) => void;
+  toggleSpotlight: () => void;
+  setWidgetsOpen: (open: boolean) => void;
+  setLocked: (locked: boolean) => void;
   openApp: (id: AppId) => void;
   closeWindow: (id: AppId) => void;
   minimizeWindow: (id: AppId) => void;
@@ -49,6 +59,8 @@ interface DesktopStoreState {
   setAppleMenuOpen: (open: boolean) => void;
   setActiveMenuDropdown: (menu: string | null) => void;
   setSelectedDesktopIcon: (id: string | null) => void;
+  setStatusMenu: (menu: 'wifi' | 'battery' | null) => void;
+  closeAllMenus: () => void;
   setAboutThisMacOpen: (open: boolean) => void;
   completeBoot: () => void;
   addNotification: (title: string, message: string, icon?: string) => void;
@@ -60,16 +72,20 @@ const generateInitialWindows = (): Record<AppId, WindowState> => {
   const result: Partial<Record<AppId, WindowState>> = {};
 
   appsData.forEach((app, index) => {
-    // Center Bear app like the screenshot
     const isBear = app.id === 'bear';
-    const initialX = isBear ? 160 : Math.max(40, 80 + (index % 5) * 36);
-    const initialY = isBear ? 55 : Math.max(50, 70 + (index % 5) * 28);
+    const width = app.defaultSize.width;
+    const height = app.defaultSize.height;
+    // Consistent reference screen dimensions for SSR to prevent hydration mismatch
+    const screenW = 1280;
+    const screenH = 800;
+    const initialX = isBear ? 150 : Math.max(20, Math.round((screenW - width) / 2));
+    const initialY = isBear ? 70 : Math.max(38, Math.round((screenH - height) / 2) - 50);
 
     result[app.id] = {
       id: app.id,
       title: app.title,
       icon: app.icon,
-      isOpen: false,
+      isOpen: isBear, // Restore intro Bear card window open by default
       isMinimized: false,
       isMaximized: false,
       position: { x: initialX, y: initialY },
@@ -84,22 +100,45 @@ const generateInitialWindows = (): Record<AppId, WindowState> => {
 
 export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
   windows: generateInitialWindows(),
-  activeWindowId: null,
+  activeWindowId: 'bear',
   maxZIndex: 10,
-  theme: 'dark',
-  wallpaper: 'tahoe',
+  theme: 'light',
+  wallpaper: 'golden-gate',
   brightness: 100,
   volume: 75,
   wifi: true,
   bluetooth: true,
   focusMode: false,
   controlCenterOpen: false,
+  widgetsOpen: false,
   appleMenuOpen: false,
   activeMenuDropdown: null,
   selectedDesktopIcon: null,
-  bootCompleted: false,
+  statusMenu: null,
+  bootCompleted: true,
+  isLocked: true,
   aboutThisMacOpen: false,
   notifications: [],
+  isMobile: false,
+  spotlightOpen: false,
+  setIsMobile: (isMobile: boolean) => set({ isMobile }),
+  setSpotlightOpen: (open: boolean) =>
+    set({
+      spotlightOpen: open,
+      controlCenterOpen: false,
+      widgetsOpen: false,
+      appleMenuOpen: false,
+      activeMenuDropdown: null,
+      statusMenu: null,
+    }),
+  toggleSpotlight: () => {
+    const next = !get().spotlightOpen;
+    get().setSpotlightOpen(next);
+  },
+
+  setLocked: (locked: boolean) => {
+    set({ isLocked: locked });
+  },
 
   openApp: (id: AppId) => {
     const { windows, maxZIndex, addNotification } = get();
@@ -108,6 +147,14 @@ export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
 
     const newZ = maxZIndex + 1;
 
+    // Center window on screen slight up whenever opened
+    const screenW = typeof window !== 'undefined' ? window.innerWidth : 1280;
+    const screenH = typeof window !== 'undefined' ? window.innerHeight : 800;
+    const width = current.size?.width || 800;
+    const height = current.size?.height || 540;
+    const centerX = Math.max(20, Math.round((screenW - width) / 2));
+    const centerY = Math.max(38, Math.round((screenH - height) / 2) - 50);
+
     set({
       windows: {
         ...windows,
@@ -115,14 +162,18 @@ export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
           ...current,
           isOpen: true,
           isMinimized: false,
+          position: current.isOpen ? current.position : { x: centerX, y: centerY },
           zIndex: newZ,
         },
       },
       activeWindowId: id,
       maxZIndex: newZ,
       controlCenterOpen: false,
+      widgetsOpen: false,
       appleMenuOpen: false,
       activeMenuDropdown: null,
+      statusMenu: null,
+      spotlightOpen: false,
     });
   },
 
@@ -357,17 +408,34 @@ export const useDesktopStore = create<DesktopStoreState>((set, get) => ({
   },
 
   setControlCenterOpen: (open: boolean) =>
-    set({ controlCenterOpen: open, appleMenuOpen: false, activeMenuDropdown: null }),
+    set({ controlCenterOpen: open, widgetsOpen: false, appleMenuOpen: false, activeMenuDropdown: null, statusMenu: null }),
+
+  setWidgetsOpen: (open: boolean) =>
+    set({ widgetsOpen: open, controlCenterOpen: false, appleMenuOpen: false, activeMenuDropdown: null, statusMenu: null }),
 
   setAppleMenuOpen: (open: boolean) =>
-    set({ appleMenuOpen: open, controlCenterOpen: false, activeMenuDropdown: null }),
+    set({ appleMenuOpen: open, controlCenterOpen: false, widgetsOpen: false, activeMenuDropdown: null, statusMenu: null }),
 
   setActiveMenuDropdown: (menu: string | null) =>
-    set({ activeMenuDropdown: menu, controlCenterOpen: false, appleMenuOpen: false }),
+    set({ activeMenuDropdown: menu, controlCenterOpen: false, widgetsOpen: false, appleMenuOpen: false, statusMenu: null }),
+
+  setStatusMenu: (menu: 'wifi' | 'battery' | null) =>
+    set({ statusMenu: menu, controlCenterOpen: false, widgetsOpen: false, appleMenuOpen: false, activeMenuDropdown: null }),
+
+  closeAllMenus: () =>
+    set({
+      statusMenu: null,
+      controlCenterOpen: false,
+      widgetsOpen: false,
+      appleMenuOpen: false,
+      activeMenuDropdown: null,
+      selectedDesktopIcon: null,
+      spotlightOpen: false,
+    }),
 
   setSelectedDesktopIcon: (id: string | null) => set({ selectedDesktopIcon: id }),
 
-  setAboutThisMacOpen: (open: boolean) => set({ aboutThisMacOpen: open, appleMenuOpen: false }),
+  setAboutThisMacOpen: (open: boolean) => set({ aboutThisMacOpen: open, appleMenuOpen: false, statusMenu: null }),
 
   completeBoot: () => {
     set({ bootCompleted: true });
