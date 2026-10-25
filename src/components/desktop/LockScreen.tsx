@@ -6,10 +6,26 @@ import { useDesktopStore } from '@/stores/useDesktopStore';
 
 export const LockScreen: React.FC = () => {
   const { isLocked, setLocked } = useDesktopStore();
-  const [timeStr, setTimeStr] = useState('');
-  const [dateStr, setDateStr] = useState('');
+  // Compute initial real time & date immediately
+  const [timeStr, setTimeStr] = useState(() => {
+    const now = new Date();
+    let hours = now.getHours();
+    hours = hours % 12 || 12;
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  });
 
-  // Clock tick
+  const [dateStr, setDateStr] = useState(() => {
+    const now = new Date();
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  });
+
+  // Clock tick every second
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -26,7 +42,6 @@ export const LockScreen: React.FC = () => {
       setDateStr(`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`);
     };
 
-    updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -55,40 +70,46 @@ export const LockScreen: React.FC = () => {
           exit={{
             opacity: 0,
             filter: 'blur(16px)',
-            transition: { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+            transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
           }}
           onClick={() => setLocked(false)}
-          className="fixed inset-0 z-[999999] select-none cursor-pointer flex flex-col justify-between items-center py-16 px-6 overflow-hidden bg-transparent"
+          className="fixed inset-0 z-[999999] select-none cursor-pointer flex flex-col justify-between items-center py-16 px-6 overflow-hidden bg-black/10 backdrop-blur-[1px]"
         >
-          {/* Center Clock & Date with smooth glide up, heavy blur and slow iPhone-style fade out */}
+          {/* Center Clock & Date with smooth glide up, blur and snappy fade out */}
           <motion.div
             initial={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{
-              y: -85,
+              y: -60,
               opacity: 0,
-              filter: 'blur(24px)',
-              scale: 1.05,
-              transition: { duration: 1.05, ease: [0.16, 1, 0.3, 1] },
+              filter: 'blur(20px)',
+              scale: 1.03,
+              transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
             }}
             className="flex flex-col items-center mt-12 text-center text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
           >
-            <h1 className="text-[96px] md:text-[124px] font-bold leading-none tracking-tight font-sans">
-              {timeStr || '1:12'}
+            <h1
+              suppressHydrationWarning
+              className="text-[96px] md:text-[124px] font-bold leading-none tracking-tight font-sans"
+            >
+              {timeStr}
             </h1>
-            <p className="text-xl md:text-2xl font-medium mt-3 text-white/95 tracking-wide">
-              {dateStr || 'Sunday, October 25'}
+            <p
+              suppressHydrationWarning
+              className="text-xl md:text-2xl font-medium mt-3 text-white/95 tracking-wide"
+            >
+              {dateStr}
             </p>
           </motion.div>
 
-          {/* Bottom Profile & Hint with smooth glide down, heavy blur and slow fade out */}
+          {/* Bottom Profile & Hint with smooth glide down, blur and snappy fade out */}
           <motion.div
             initial={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{
-              y: 55,
+              y: 40,
               opacity: 0,
-              filter: 'blur(20px)',
-              scale: 0.92,
-              transition: { duration: 0.95, ease: [0.16, 1, 0.3, 1] },
+              filter: 'blur(16px)',
+              scale: 0.94,
+              transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
             }}
             className="flex flex-col items-center space-y-3 pb-4 text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.65)]"
           >
