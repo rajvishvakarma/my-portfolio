@@ -16,33 +16,43 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://raj-vishvakarma.vercel.app'),
   title: {
-    default: 'Raj Vishvakarma — Software Engineer | Official Portfolio',
+    default: 'Raj Vishvakarma — macOS Portfolio | macOS Simulation & GitHub',
     template: '%s | Raj Vishvakarma',
   },
   description:
-    'Official portfolio of Raj Vishvakarma, Software Engineer and AI & Robotics student. Explore mobile apps, full-stack projects, AI agents, Flutter builds, and background in an interactive macOS desktop experience.',
+    'Official interactive macOS portfolio and macOS web simulation by Raj Vishvakarma on GitHub (rajvishvakarma088-star/my-portfolio). Explore mobile apps, AI agents, and software engineering builds in a browser desktop.',
   keywords: [
-    'Raj Vishvakarma',
-    'Raj Vishwakarma',
-    'Raj Vishvakarma portfolio',
-    'Raj Vishwakarma portfolio',
-    'Raj Vishvakarma software engineer',
-    'Raj Vishwakarma developer',
-    'Raj Vishvakarma Balaghat',
-    'Software Engineer',
-    'Full Stack Developer',
-    'Flutter Developer',
-    'Mobile Application Engineer',
-    'macOS Portfolio',
-    'Interactive Portfolio',
-    'Next.js Portfolio',
-    'Metheus Lab',
-    'Madhav Institute of Technology and Science',
+    'raj vishvakarma github',
+    'raj vishwakarma github',
+    'mac portfolio',
+    'macos portfolio',
+    'mac os simulation',
+    'macos simulation',
+    'mac os web simulation',
+    'macos web simulator',
+    'mac os desktop simulation',
+    'raj vishvakarma macos',
+    'raj vishvakarma macos portfolio',
+    'raj vishvakarma',
+    'raj vishwakarma',
+    'raj vishvakarma software engineer',
+    'raj vishwakarma developer',
+    'raj vishvakarma balaghat',
+    'interactive developer portfolio',
+    'nextjs macos portfolio',
+    'my-portfolio github',
+    'rajvishvakarma088-star',
+    'rajvishvakarma088-star my-portfolio',
   ],
-  authors: [{ name: 'Raj Vishvakarma', url: 'https://raj-vishvakarma.vercel.app' }],
+  authors: [
+    {
+      name: 'Raj Vishvakarma',
+      url: 'https://github.com/rajvishvakarma088-star',
+    },
+  ],
   creator: 'Raj Vishvakarma',
   publisher: 'Raj Vishvakarma',
-  applicationName: 'Raj Vishvakarma macOS Portfolio',
+  applicationName: 'Raj Vishvakarma macOS Portfolio & Simulation',
   alternates: {
     canonical: '/',
   },
@@ -57,30 +67,27 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
   },
   openGraph: {
-    title: 'Raj Vishvakarma — Software Engineer | Official Portfolio',
+    title: 'Raj Vishvakarma — macOS Portfolio | macOS Simulation & GitHub',
     description:
-      'Official interactive macOS desktop portfolio of Raj Vishvakarma. Explore mobile apps, AI agents, and production software projects.',
+      'Explore the official macOS portfolio and macOS web simulation created by Raj Vishvakarma on GitHub. Built with Next.js 16, React, and TypeScript.',
     url: 'https://raj-vishvakarma.vercel.app',
-    siteName: 'Raj Vishvakarma Portfolio',
+    siteName: 'Raj Vishvakarma macOS Portfolio',
     locale: 'en_US',
-    type: 'profile',
-    firstName: 'Raj',
-    lastName: 'Vishvakarma',
-    username: 'rajvishvakarma088-star',
+    type: 'website',
     images: [
       {
         url: '/img/ui/avatar.jpg',
         width: 800,
         height: 800,
-        alt: 'Raj Vishvakarma — Software Engineer',
+        alt: 'Raj Vishvakarma — macOS Portfolio & GitHub',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Raj Vishvakarma — Software Engineer',
+    title: 'Raj Vishvakarma — macOS Portfolio & Simulation',
     description:
-      'Official portfolio of Raj Vishvakarma. Interactive macOS experience showcasing mobile apps, AI agents, and software engineering work.',
+      'Official interactive macOS simulation and developer portfolio by Raj Vishvakarma on GitHub.',
     images: ['/img/ui/avatar.jpg'],
     creator: '@rajvishvakarma',
   },
@@ -127,13 +134,15 @@ const jsonLd = {
       email: 'rajvishvakarma088@gmail.com',
       sameAs: [
         'https://github.com/rajvishvakarma088-star',
+        'https://github.com/rajvishvakarma088-star/my-portfolio',
         'https://metheuslab.com',
       ],
       description:
-        'Software Engineer and AI & Robotics undergraduate building mobile apps, AI agents, and reliable automation systems.',
+        'Software Engineer and creator of the macOS Portfolio and macOS Simulation on GitHub. Builds mobile apps, AI agents, and reliable automation systems.',
       knowsAbout: [
+        'macOS Portfolio',
+        'macOS Simulation',
         'Software Engineering',
-        'Web Development',
         'Next.js',
         'React',
         'TypeScript',
@@ -142,27 +151,36 @@ const jsonLd = {
         'Android Development',
         'Artificial Intelligence',
         'Robotics',
-        'Geospatial Tracking',
         'Automation',
       ],
     },
     {
-      '@type': 'ProfilePage',
-      '@id': 'https://raj-vishvakarma.vercel.app/#webpage',
+      '@type': 'SoftwareSourceCode',
+      '@id': 'https://github.com/rajvishvakarma088-star/my-portfolio#code',
+      name: 'macOS Portfolio & macOS Simulation by Raj Vishvakarma',
+      codeRepository: 'https://github.com/rajvishvakarma088-star/my-portfolio',
       url: 'https://raj-vishvakarma.vercel.app',
-      name: 'Raj Vishvakarma — Software Engineer | Official Portfolio',
-      description:
-        'Official interactive macOS desktop portfolio of Raj Vishvakarma, Software Engineer.',
-      isPartOf: {
-        '@type': 'WebSite',
-        '@id': 'https://raj-vishvakarma.vercel.app/#website',
-        url: 'https://raj-vishvakarma.vercel.app',
-        name: 'Raj Vishvakarma Portfolio',
-        publisher: {
-          '@id': 'https://raj-vishvakarma.vercel.app/#person',
-        },
+      programmingLanguage: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS'],
+      author: {
+        '@id': 'https://raj-vishvakarma.vercel.app/#person',
       },
-      mainEntity: {
+      description:
+        'An interactive, high-fidelity macOS desktop simulation and developer portfolio website created by Raj Vishvakarma on GitHub.',
+      keywords: [
+        'raj vishvakarma github',
+        'mac portfolio',
+        'macos portfolio',
+        'mac os simulation',
+        'macos web simulator',
+        'raj vishvakarma',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://raj-vishvakarma.vercel.app/#website',
+      url: 'https://raj-vishvakarma.vercel.app',
+      name: 'Raj Vishvakarma — macOS Portfolio | macOS Simulation',
+      publisher: {
         '@id': 'https://raj-vishvakarma.vercel.app/#person',
       },
     },
@@ -186,28 +204,66 @@ export default function RootLayout({
         />
       </head>
       <body className="h-full overflow-hidden bg-black select-none font-sans">
-        {/* Semantic SEO content accessible to search engine crawlers */}
+        {/* Semantic SEO content targeting "raj vishvakarma github", "mac portfolio", "mac os simulation" */}
         <div className="sr-only">
-          <h1>Raj Vishvakarma — Software Engineer &amp; Developer Portfolio</h1>
-          <p>{profile.tagline}</p>
+          <h1>Raj Vishvakarma — macOS Portfolio &amp; macOS Simulation (GitHub)</h1>
+          <p>
+            Welcome to the official <strong>macOS Portfolio</strong> and{' '}
+            <strong>macOS Simulation</strong> website built by{' '}
+            <strong>Raj Vishvakarma</strong>. Find the source code on{' '}
+            <a href="https://github.com/rajvishvakarma088-star/my-portfolio">
+              Raj Vishvakarma GitHub (rajvishvakarma088-star/my-portfolio)
+            </a>
+            .
+          </p>
+          <p>
+            Explore Raj Vishvakarma’s GitHub profile at{' '}
+            <a href="https://github.com/rajvishvakarma088-star">
+              github.com/rajvishvakarma088-star
+            </a>
+            .
+          </p>
+
+          <h2>About This macOS Web Simulation &amp; Mac Portfolio</h2>
+          <p>
+            This website provides a realistic macOS desktop simulation in the
+            browser featuring multi-window management, Apple menu bar, dock
+            magnification, and full-featured interactive applications.
+          </p>
           <p>{profile.shortBio}</p>
-          <h2>About Raj Vishvakarma</h2>
-          {profile.fullBio.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
-          <h2>Featured Software Projects by Raj Vishvakarma</h2>
+
+          <h2>Featured Projects by Raj Vishvakarma on GitHub</h2>
           <ul>
             {projects.map((proj) => (
               <li key={proj.id}>
                 <strong>{proj.title}</strong>: {proj.shortDescription}. Built with{' '}
                 {proj.tags.join(', ')}.
+                {proj.githubUrl && (
+                  <span>
+                    {' '}
+                    — Source on GitHub:{' '}
+                    <a href={proj.githubUrl}>{proj.githubUrl}</a>
+                  </span>
+                )}
               </li>
             ))}
           </ul>
-          <h2>Contact Raj Vishvakarma</h2>
+
+          <h2>Connect with Raj Vishvakarma</h2>
           <p>Location: {profile.location}</p>
           <p>Email: {profile.email}</p>
-          <p>GitHub: {profile.github}</p>
+          <p>
+            GitHub:{' '}
+            <a href="https://github.com/rajvishvakarma088-star">
+              https://github.com/rajvishvakarma088-star
+            </a>
+          </p>
+          <p>
+            Repository:{' '}
+            <a href="https://github.com/rajvishvakarma088-star/my-portfolio">
+              https://github.com/rajvishvakarma088-star/my-portfolio
+            </a>
+          </p>
         </div>
 
         {children}
