@@ -98,16 +98,19 @@ export const Desktop: React.FC = () => {
       {/* About This Mac Modal */}
       <AboutThisMacModal />
 
-      {/* Desktop Workspace with iPhone-style Slow Blur & Dissolve Transition */}
+      {/* Desktop Workspace with Butter-Smooth Hardware-Accelerated Reveal */}
       <motion.div
         animate={{
           opacity: isLocked ? 0 : 1,
           scale: isLocked ? 0.98 : 1,
-          filter: isLocked ? 'blur(16px)' : 'blur(0px)',
         }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         className="w-full h-full pointer-events-auto"
-        style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+        style={{
+          pointerEvents: isLocked ? 'none' : 'auto',
+          willChange: 'transform, opacity',
+          transform: 'translateZ(0)',
+        }}
       >
         {isMobile ? (
           /* Dedicated Mobile App Launcher */

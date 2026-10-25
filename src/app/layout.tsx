@@ -38,6 +38,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full antialiased">
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/wallpapers/27-golden-gate-day.jpg"
+          fetchPriority="high"
+        />
+        <link rel="preload" as="image" href="/img/raj.jpg?v=5" />
+      </head>
       <body className="h-full overflow-hidden bg-black select-none font-sans">
         {children}
       </body>
