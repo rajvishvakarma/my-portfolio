@@ -18,7 +18,7 @@ import { experiences } from '@/data/experience';
 export const BearApp: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<'profile' | 'projects'>('profile');
   const [selectedNote, setSelectedNote] = useState<string>('about-me');
-  const [mobileScreen, setMobileScreen] = useState<'notes' | 'document'>('notes');
+  const [mobileScreen, setMobileScreen] = useState<'notes' | 'document'>('document');
 
   const profileNotes = [
     {

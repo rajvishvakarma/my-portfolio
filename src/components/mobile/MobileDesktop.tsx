@@ -177,13 +177,27 @@ export const MobileDesktop: React.FC = () => {
 
       {/* Main Home Screen Grid (When no app is currently open full-screen) */}
       <div className="flex-1 overflow-y-auto px-4 pt-3 pb-8 space-y-5 z-10 no-scrollbar">
-        {/* Profile Card Widget on Home Screen */}
-        <div className="p-4 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 flex items-center space-x-3.5 shadow-xl">
-          <div className="w-13 h-13 rounded-2xl overflow-hidden border border-white/20 relative shrink-0">
+        {/* Profile Card Widget on Home Screen - Click to view Bear intro card */}
+        <div
+          onClick={() => openApp('bear')}
+          className="p-4 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/10 flex items-center space-x-3.5 shadow-xl cursor-pointer active:scale-[0.98] transition-all hover:bg-black/50 hover:border-white/20 select-none group"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openApp('bear');
+            }
+          }}
+          title="Raj Vishvakarma · Click to view intro"
+        >
+          <div className="w-13 h-13 rounded-2xl overflow-hidden border border-white/20 relative shrink-0 group-hover:scale-105 transition-transform">
             <Image src={profile.avatar} alt={profile.name} fill className="object-cover" />
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="font-bold text-sm text-white truncate">{profile.name}</h2>
+            <h2 className="font-bold text-sm text-white truncate group-hover:text-blue-300 transition-colors">
+              {profile.name}
+            </h2>
             <p className="text-xs text-blue-400 font-medium">{profile.role}</p>
             <p className="text-[11px] text-neutral-300 truncate mt-0.5">{profile.location}</p>
           </div>
@@ -192,8 +206,9 @@ export const MobileDesktop: React.FC = () => {
               e.stopPropagation();
               toggleTheme();
             }}
-            className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors active:scale-90"
+            className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors active:scale-90 shrink-0"
             title="Toggle theme"
+            aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
