@@ -142,10 +142,10 @@ export const MobileDesktop: React.FC = () => {
   return (
     <div
       onClick={closeAllMenus}
-      className="relative w-full h-full flex flex-col justify-between overflow-hidden text-white select-none"
+      className="relative w-full h-full h-[100dvh] flex flex-col justify-between overflow-hidden text-white select-none"
     >
       {/* Mobile Top Status Bar */}
-      <div className="h-10 px-4 flex items-center justify-between text-xs font-semibold z-50 bg-black/25 backdrop-blur-md border-b border-white/5">
+      <div className="h-10 px-4 flex items-center justify-between text-xs font-semibold z-50 bg-black/25 backdrop-blur-md border-b border-white/5 shrink-0">
         {/* Left side: Time + indicator that opens Widgets / Notification section */}
         <button
           onClick={(e) => {
@@ -175,8 +175,8 @@ export const MobileDesktop: React.FC = () => {
         </button>
       </div>
 
-      {/* Main Home Screen Grid (When no app is currently open full-screen) */}
-      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-8 space-y-5 z-10 no-scrollbar">
+      {/* Main Home Screen Grid (Scrollable without pushing dock off-screen) */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-3 pb-4 space-y-4 z-10 no-scrollbar">
         {/* Profile Card Widget on Home Screen - Click to view Bear intro card */}
         <div
           onClick={() => openApp('bear')}
@@ -215,7 +215,7 @@ export const MobileDesktop: React.FC = () => {
         </div>
 
         {/* Mobile App Grid */}
-        <div className="grid grid-cols-4 gap-y-5 gap-x-2 justify-items-center">
+        <div className="grid grid-cols-4 gap-y-4 gap-x-2 justify-items-center">
           {mobileApps.map((app) => (
             <button
               key={app.id}
@@ -233,10 +233,10 @@ export const MobileDesktop: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Floating Quick Dock */}
-      <div className="p-4 flex justify-center z-20">
-        <div className="px-5 py-2.5 rounded-3xl bg-black/40 backdrop-blur-2xl border border-white/15 flex items-center space-x-5 shadow-2xl">
-          {['finder', 'about', 'projects', 'contact'].map((appId) => {
+      {/* Bottom Floating Quick Dock - Always visible, locked at bottom with safe area */}
+      <div className="shrink-0 w-full px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))] flex justify-center z-20">
+        <div className="px-5 py-2.5 rounded-3xl bg-black/45 backdrop-blur-2xl border border-white/15 flex items-center space-x-5 shadow-2xl">
+          {['finder', 'bear', 'safari', 'projects', 'contact'].map((appId) => {
             const app = appsData.find((a) => a.id === appId);
             if (!app) return null;
             return (
@@ -244,6 +244,7 @@ export const MobileDesktop: React.FC = () => {
                 key={app.id}
                 onClick={() => openApp(app.id)}
                 className="w-11 h-11 relative active:scale-90 transition-transform"
+                title={app.title}
               >
                 <Image src={app.icon} alt={app.dockTitle} fill className="object-contain" />
               </button>

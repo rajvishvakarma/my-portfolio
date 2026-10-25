@@ -78,7 +78,7 @@ export const Desktop: React.FC = () => {
   return (
     <div
       onClick={handleDesktopClick}
-      className={`relative w-screen h-screen overflow-hidden select-none font-sans ${theme === 'dark' ? 'dark' : ''
+      className={`relative w-full h-screen h-[100dvh] overflow-hidden select-none font-sans ${theme === 'dark' ? 'dark' : ''
         }`}
     >
       {/* Background Wallpaper */}

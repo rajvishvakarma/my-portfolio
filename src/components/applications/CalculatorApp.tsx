@@ -11,14 +11,17 @@ export const CalculatorApp: React.FC = () => {
   const [operator, setOperator] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
 
-  const inputDigit = useCallback((digit: string) => {
-    if (waitingForOperand) {
-      setDisplay(digit);
-      setWaitingForOperand(false);
-    } else {
-      setDisplay(display === '0' ? digit : display + digit);
-    }
-  }, [display, waitingForOperand]);
+  const inputDigit = useCallback(
+    (digit: string) => {
+      if (waitingForOperand) {
+        setDisplay(digit);
+        setWaitingForOperand(false);
+      } else {
+        setDisplay(display === '0' ? digit : display + digit);
+      }
+    },
+    [display, waitingForOperand]
+  );
 
   const inputDot = useCallback(() => {
     if (waitingForOperand) {
@@ -56,39 +59,41 @@ export const CalculatorApp: React.FC = () => {
     }
   }, [display]);
 
-  const performOperation = useCallback((nextOperator: string) => {
-    const inputValue = parseFloat(display);
+  const performOperation = useCallback(
+    (nextOperator: string) => {
+      const inputValue = parseFloat(display);
 
-    if (prevValue === null) {
-      setPrevValue(inputValue);
-    } else if (operator) {
-      const currentValue = prevValue || 0;
-      let newValue = currentValue;
+      if (prevValue === null) {
+        setPrevValue(inputValue);
+      } else if (operator) {
+        const currentValue = prevValue || 0;
+        let newValue = currentValue;
 
-      switch (operator) {
-        case '+':
-          newValue = currentValue + inputValue;
-          break;
-        case '-':
-          newValue = currentValue - inputValue;
-          break;
-        case '×':
-          newValue = currentValue * inputValue;
-          break;
-        case '÷':
-          newValue = inputValue !== 0 ? currentValue / inputValue : 0;
-          break;
+        switch (operator) {
+          case '+':
+            newValue = currentValue + inputValue;
+            break;
+          case '-':
+            newValue = currentValue - inputValue;
+            break;
+          case '×':
+            newValue = currentValue * inputValue;
+            break;
+          case '÷':
+            newValue = inputValue !== 0 ? currentValue / inputValue : 0;
+            break;
+        }
+
+        const formatted = parseFloat(newValue.toFixed(8));
+        setDisplay(String(formatted));
+        setPrevValue(formatted);
       }
 
-      // Format to avoid long floating point precision errors
-      const formatted = parseFloat(newValue.toFixed(8));
-      setDisplay(String(formatted));
-      setPrevValue(formatted);
-    }
-
-    setWaitingForOperand(true);
-    setOperator(nextOperator);
-  }, [display, prevValue, operator]);
+      setWaitingForOperand(true);
+      setOperator(nextOperator);
+    },
+    [display, prevValue, operator]
+  );
 
   const calculateEquals = useCallback(() => {
     if (!operator || prevValue === null) return;
@@ -149,176 +154,177 @@ export const CalculatorApp: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [inputDigit, inputDot, calculateEquals, performOperation, inputPercent, clearAll]);
 
-  // Determine button label for Clear (C vs AC)
   const clearLabel = display !== '0' ? 'C' : 'AC';
 
   return (
     <div
-      className={`flex flex-col h-full p-3.5 select-none font-[-apple-system,BlinkMacSystemFont,sans-serif] transition-colors duration-200 ${
-        isDark ? 'bg-[#1e1e1e] text-white' : 'bg-[#e5e5e7] text-neutral-900'
+      className={`flex flex-col h-full justify-end p-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] select-none font-[-apple-system,BlinkMacSystemFont,sans-serif] transition-colors duration-200 ${
+        isDark ? 'bg-black text-white' : 'bg-[#f4f4f7] text-neutral-900'
       }`}
     >
-      {/* Display Screen */}
-      <div className="h-20 flex items-end justify-end px-3 pb-2 overflow-hidden">
-        <span
-          className={`font-light tracking-tight transition-all tabular-nums ${
-            display.length > 11
-              ? 'text-2xl'
-              : display.length > 8
-              ? 'text-3xl'
-              : 'text-5xl'
-          } ${isDark ? 'text-white' : 'text-neutral-900'}`}
-        >
-          {display}
-        </span>
-      </div>
+      <div className="w-full max-w-xs sm:max-w-sm mx-auto flex flex-col justify-end flex-1">
+        {/* Display Screen */}
+        <div className="flex-1 min-h-[80px] flex items-end justify-end px-3 pb-3 overflow-hidden">
+          <span
+            className={`font-light tracking-tight transition-all tabular-nums text-right ${
+              display.length > 11
+                ? 'text-4xl'
+                : display.length > 8
+                ? 'text-5xl'
+                : 'text-6xl sm:text-7xl'
+            } ${isDark ? 'text-white' : 'text-neutral-900'}`}
+          >
+            {display}
+          </span>
+        </div>
 
-      {/* Calculator Buttons Grid */}
-      <div className="grid grid-cols-4 gap-2 flex-1 mt-1">
-        {/* Row 1 */}
-        <button
-          onClick={display !== '0' ? clearDisplay : clearAll}
-          className={`rounded-full font-medium text-base flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
-            isDark
-              ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black'
-              : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900'
-          }`}
-        >
-          {clearLabel}
-        </button>
-        <button
-          onClick={toggleSign}
-          className={`rounded-full font-medium text-base flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
-            isDark
-              ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black'
-              : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900'
-          }`}
-        >
-          ±
-        </button>
-        <button
-          onClick={inputPercent}
-          className={`rounded-full font-medium text-base flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
-            isDark
-              ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black'
-              : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900'
-          }`}
-        >
-          %
-        </button>
-        <button
-          onClick={() => performOperation('÷')}
-          className={`rounded-full font-medium text-xl flex items-center justify-center transition-all active:scale-95 shadow-2xs ${
-            operator === '÷' && waitingForOperand
-              ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
-              : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white'
-          }`}
-        >
-          ÷
-        </button>
-
-        {/* Row 2 */}
-        {['7', '8', '9'].map((n) => (
+        {/* Calculator Buttons Grid - Authentic Circular Keys */}
+        <div className="grid grid-cols-4 gap-2.5 sm:gap-3.5 w-full">
+          {/* Row 1 */}
           <button
-            key={n}
-            onClick={() => inputDigit(n)}
-            className={`rounded-full font-medium text-lg flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
+            onClick={display !== '0' ? clearDisplay : clearAll}
+            className={`aspect-square rounded-full font-medium text-lg sm:text-xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
               isDark
-                ? 'bg-[#333333] hover:bg-[#505050] text-white'
-                : 'bg-white hover:bg-neutral-100 text-neutral-900'
+                ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black active:bg-[#d4d4d2]'
+                : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900 active:bg-[#b5b5ba]'
             }`}
           >
-            {n}
+            {clearLabel}
           </button>
-        ))}
-        <button
-          onClick={() => performOperation('×')}
-          className={`rounded-full font-medium text-xl flex items-center justify-center transition-all active:scale-95 shadow-2xs ${
-            operator === '×' && waitingForOperand
-              ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
-              : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white'
-          }`}
-        >
-          ×
-        </button>
-
-        {/* Row 3 */}
-        {['4', '5', '6'].map((n) => (
           <button
-            key={n}
-            onClick={() => inputDigit(n)}
-            className={`rounded-full font-medium text-lg flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
+            onClick={toggleSign}
+            className={`aspect-square rounded-full font-medium text-lg sm:text-xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
               isDark
-                ? 'bg-[#333333] hover:bg-[#505050] text-white'
-                : 'bg-white hover:bg-neutral-100 text-neutral-900'
+                ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black active:bg-[#d4d4d2]'
+                : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900 active:bg-[#b5b5ba]'
             }`}
           >
-            {n}
+            ±
           </button>
-        ))}
-        <button
-          onClick={() => performOperation('-')}
-          className={`rounded-full font-medium text-xl flex items-center justify-center transition-all active:scale-95 shadow-2xs ${
-            operator === '-' && waitingForOperand
-              ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
-              : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white'
-          }`}
-        >
-          −
-        </button>
-
-        {/* Row 4 */}
-        {['1', '2', '3'].map((n) => (
           <button
-            key={n}
-            onClick={() => inputDigit(n)}
-            className={`rounded-full font-medium text-lg flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
+            onClick={inputPercent}
+            className={`aspect-square rounded-full font-medium text-lg sm:text-xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
               isDark
-                ? 'bg-[#333333] hover:bg-[#505050] text-white'
-                : 'bg-white hover:bg-neutral-100 text-neutral-900'
+                ? 'bg-[#a5a5a5] hover:bg-[#d4d4d2] text-black active:bg-[#d4d4d2]'
+                : 'bg-[#d0d0d4] hover:bg-[#c2c2c6] text-neutral-900 active:bg-[#b5b5ba]'
             }`}
           >
-            {n}
+            %
           </button>
-        ))}
-        <button
-          onClick={() => performOperation('+')}
-          className={`rounded-full font-medium text-xl flex items-center justify-center transition-all active:scale-95 shadow-2xs ${
-            operator === '+' && waitingForOperand
-              ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
-              : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white'
-          }`}
-        >
-          +
-        </button>
+          <button
+            onClick={() => performOperation('÷')}
+            className={`aspect-square rounded-full font-medium text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+              operator === '÷' && waitingForOperand
+                ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
+                : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white active:bg-[#cc7f08]'
+            }`}
+          >
+            ÷
+          </button>
 
-        {/* Row 5 */}
-        <button
-          onClick={() => inputDigit('0')}
-          className={`col-span-2 rounded-full font-medium text-lg flex items-center justify-start pl-7 transition-colors active:scale-95 shadow-2xs ${
-            isDark
-              ? 'bg-[#333333] hover:bg-[#505050] text-white'
-              : 'bg-white hover:bg-neutral-100 text-neutral-900'
-          }`}
-        >
-          0
-        </button>
-        <button
-          onClick={inputDot}
-          className={`rounded-full font-medium text-lg flex items-center justify-center transition-colors active:scale-95 shadow-2xs ${
-            isDark
-              ? 'bg-[#333333] hover:bg-[#505050] text-white'
-              : 'bg-white hover:bg-neutral-100 text-neutral-900'
-          }`}
-        >
-          .
-        </button>
-        <button
-          onClick={calculateEquals}
-          className="rounded-full bg-[#ff9f0a] hover:bg-[#ffb340] text-white font-medium text-xl flex items-center justify-center transition-colors active:scale-95 shadow-2xs"
-        >
-          =
-        </button>
+          {/* Row 2 */}
+          {['7', '8', '9'].map((n) => (
+            <button
+              key={n}
+              onClick={() => inputDigit(n)}
+              className={`aspect-square rounded-full font-medium text-xl sm:text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+                isDark
+                  ? 'bg-[#333333] hover:bg-[#48484a] text-white active:bg-[#505050]'
+                  : 'bg-white hover:bg-neutral-100 text-neutral-900 active:bg-neutral-200'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            onClick={() => performOperation('×')}
+            className={`aspect-square rounded-full font-medium text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+              operator === '×' && waitingForOperand
+                ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
+                : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white active:bg-[#cc7f08]'
+            }`}
+          >
+            ×
+          </button>
+
+          {/* Row 3 */}
+          {['4', '5', '6'].map((n) => (
+            <button
+              key={n}
+              onClick={() => inputDigit(n)}
+              className={`aspect-square rounded-full font-medium text-xl sm:text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+                isDark
+                  ? 'bg-[#333333] hover:bg-[#48484a] text-white active:bg-[#505050]'
+                  : 'bg-white hover:bg-neutral-100 text-neutral-900 active:bg-neutral-200'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            onClick={() => performOperation('-')}
+            className={`aspect-square rounded-full font-medium text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+              operator === '-' && waitingForOperand
+                ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
+                : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white active:bg-[#cc7f08]'
+            }`}
+          >
+            −
+          </button>
+
+          {/* Row 4 */}
+          {['1', '2', '3'].map((n) => (
+            <button
+              key={n}
+              onClick={() => inputDigit(n)}
+              className={`aspect-square rounded-full font-medium text-xl sm:text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+                isDark
+                  ? 'bg-[#333333] hover:bg-[#48484a] text-white active:bg-[#505050]'
+                  : 'bg-white hover:bg-neutral-100 text-neutral-900 active:bg-neutral-200'
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            onClick={() => performOperation('+')}
+            className={`aspect-square rounded-full font-medium text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+              operator === '+' && waitingForOperand
+                ? 'bg-white text-[#ff9f0a] ring-2 ring-[#ff9f0a]'
+                : 'bg-[#ff9f0a] hover:bg-[#ffb340] text-white active:bg-[#cc7f08]'
+            }`}
+          >
+            +
+          </button>
+
+          {/* Row 5 */}
+          <button
+            onClick={() => inputDigit('0')}
+            className={`col-span-2 rounded-full font-medium text-xl sm:text-2xl flex items-center justify-start pl-7 sm:pl-8 transition-all active:scale-95 shadow-xs ${
+              isDark
+                ? 'bg-[#333333] hover:bg-[#48484a] text-white active:bg-[#505050]'
+                : 'bg-white hover:bg-neutral-100 text-neutral-900 active:bg-neutral-200'
+            }`}
+          >
+            0
+          </button>
+          <button
+            onClick={inputDot}
+            className={`aspect-square rounded-full font-medium text-xl sm:text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs ${
+              isDark
+                ? 'bg-[#333333] hover:bg-[#48484a] text-white active:bg-[#505050]'
+                : 'bg-white hover:bg-neutral-100 text-neutral-900 active:bg-neutral-200'
+            }`}
+          >
+            .
+          </button>
+          <button
+            onClick={calculateEquals}
+            className="aspect-square rounded-full bg-[#ff9f0a] hover:bg-[#ffb340] active:bg-[#cc7f08] text-white font-medium text-2xl flex items-center justify-center transition-all active:scale-95 shadow-xs"
+          >
+            =
+          </button>
+        </div>
       </div>
     </div>
   );
