@@ -78,9 +78,8 @@ export const Desktop: React.FC = () => {
   return (
     <div
       onClick={handleDesktopClick}
-      className={`relative w-screen h-screen overflow-hidden select-none font-sans ${
-        theme === 'dark' ? 'dark' : ''
-      }`}
+      className={`relative w-screen h-screen overflow-hidden select-none font-sans ${theme === 'dark' ? 'dark' : ''
+        }`}
     >
       {/* Background Wallpaper */}
       <Wallpaper />
@@ -98,19 +97,16 @@ export const Desktop: React.FC = () => {
       {/* About This Mac Modal */}
       <AboutThisMacModal />
 
-      {/* Desktop Workspace with Butter-Smooth Hardware-Accelerated Reveal */}
+      {/* Desktop Workspace with iPhone-style Slow Blur & Dissolve Transition */}
       <motion.div
         animate={{
           opacity: isLocked ? 0 : 1,
           scale: isLocked ? 0.98 : 1,
+          filter: isLocked ? 'blur(16px)' : 'blur(0px)',
         }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
         className="w-full h-full pointer-events-auto"
-        style={{
-          pointerEvents: isLocked ? 'none' : 'auto',
-          willChange: 'transform, opacity',
-          transform: 'translateZ(0)',
-        }}
+        style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
       >
         {isMobile ? (
           /* Dedicated Mobile App Launcher */

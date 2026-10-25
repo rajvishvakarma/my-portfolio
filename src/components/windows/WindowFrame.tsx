@@ -146,7 +146,7 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
       transition={{ duration: 0.22, ease: [0.2, 0.88, 0.25, 1] }}
       onMouseDown={(event) => {
         focusWindow(id);
-        if ((id === 'finder' || id === 'safari') && (event.target as HTMLElement).closest('[data-window-drag]') && !(event.target as HTMLElement).closest('button, input')) handleTitleBarMouseDown(event);
+        if ((id === 'finder' || id === 'safari' || id === 'clock') && (event.target as HTMLElement).closest('[data-window-drag]') && !(event.target as HTMLElement).closest('button, input')) handleTitleBarMouseDown(event);
       }}
       style={{
         left: isMaximized ? 0 : position.x,
@@ -168,7 +168,7 @@ export const WindowFrame: React.FC<WindowFrameProps> = ({ windowState, children 
       }`}
     >
       {/* Liquid Glass Title Bar */}
-      {id !== 'finder' && id !== 'safari' && <div
+      {id !== 'finder' && id !== 'safari' && id !== 'clock' && <div
         onMouseDown={handleTitleBarMouseDown}
         onDoubleClick={() => maximizeWindow(id)}
         className={`mac-window-toolbar h-[42px] shrink-0 px-3.5 flex items-center justify-between cursor-default select-none transition-colors ${

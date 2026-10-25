@@ -36,6 +36,7 @@ import { AppStoreApp } from '../applications/AppStoreApp';
 import { VSCodeApp } from '../applications/VSCodeApp';
 import { WorkspaceApps } from '../applications/WorkspaceApps';
 import { YouTubeEmbedView } from '../applications/YouTubeEmbedView';
+import { ClockApp } from '../applications/ClockApp';
 
 const renderAppContent = (id: AppId) => {
   switch (id) {
@@ -95,6 +96,8 @@ const renderAppContent = (id: AppId) => {
       return <CalculatorApp />;
     case 'app-store':
       return <AppStoreApp />;
+    case 'clock':
+      return <ClockApp />;
     default:
       return <WorkspaceApps id={id} />;
   }

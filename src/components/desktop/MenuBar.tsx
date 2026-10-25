@@ -23,6 +23,7 @@ import { DynamicIsland } from './DynamicIsland';
 import { getAppMetadata } from '@/data/apps';
 import { appsData } from '@/data/apps';
 import { useMediaStore } from '@/stores/useMediaStore';
+import { MacWifiIcon } from '@/components/common/MacWifiIcon';
 
 export const MenuBar: React.FC = () => {
   const {
@@ -272,7 +273,7 @@ export const MenuBar: React.FC = () => {
             }`}
             title={wifi ? 'Wi-Fi: On' : 'Wi-Fi: Off'}
           >
-            <Wifi size={14} className={wifi ? 'opacity-100' : 'opacity-40'} />
+            <MacWifiIcon size={15} active={wifi} />
           </button>
 
           {/* Bluetooth Icon */}
